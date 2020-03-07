@@ -639,8 +639,8 @@ if not app.debug:
     ))
     app.logger.setLevel(logging.INFO)  # pylint: disable=E1103
     file_handler.setLevel(logging.INFO)
-    app.logger.addHandler(file_handler)
-    app.logger.info('errors')
+    app.logger.addHandler(file_handler)  # pylint: disable=E1103
+    app.logger.info('errors')  # pylint: disable=E1103
 
 # ----------------------------------------------------------------------------#
 # Launch.
