@@ -7,8 +7,11 @@ SECRET_KEY = os.urandom(32)
 basedir = os.path.abspath(os.path.dirname(__file__))
 DEBUG = True
 
-# Connect to the database
+DIALECT = 'postgresql'
+USER = 'dneal'
+PASS = ''
+HOST = 'localhost'
+PORT = 5432
+DATABASE = 'fyyur'
 
-
-# TODO IMPLEMENT DATABASE URL
-SQLALCHEMY_DATABASE_URI = '<Put your local database url>'
+SQLALCHEMY_DATABASE_URI = f'{DIALECT}://{USER}:{PASS}@{HOST}:{PORT}/{DATABASE}'
