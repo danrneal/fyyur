@@ -218,6 +218,11 @@ app.jinja_env.filters['datetime'] = format_datetime  # pylint: disable=E1101
 
 @app.route('/')
 def index():
+    """The route handler for the homepage
+
+    Returns:
+        A rendered html template for the homepage
+    """
     return render_template('pages/home.html')
 
 
