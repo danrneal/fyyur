@@ -75,7 +75,7 @@ def format_datetime(value, datetime_format='medium'):
     return babel.dates.format_datetime(date, datetime_format)
 
 
-app.jinja_env().filters['datetime'] = format_datetime
+app.jinja_env.filters['datetime'] = format_datetime  # pylint: disable=E1101
 
 # ----------------------------------------------------------------------------#
 # Controllers
