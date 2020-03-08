@@ -185,13 +185,22 @@ class Genre(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120), nullable=False)
 
-
 # ----------------------------------------------------------------------------#
 # Filters
 # ----------------------------------------------------------------------------#
 
 
 def format_datetime(value, datetime_format='medium'):
+    """Converts a datetime str to a format that is understood by the db
+
+    Args:
+        value: A str representing a datetime
+        datetime_format: A str representing the desired format of the returned
+            datetime, accepted values are ('full', 'medium')
+
+    Returns:
+        A date formatted according to the given format
+    """
     date = dateutil.parser.parse(value)
     if datetime_format == 'full':
         datetime_format = "EEEE MMMM, d, y 'at' h:mma"
