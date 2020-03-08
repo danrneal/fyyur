@@ -68,16 +68,40 @@ class Venue(db.Model):
 
 
 class Artist(db.Model):
+    """A model representing an artist
+
+    Attributes:
+        id: A unique identifer for the artist object
+        name: A str representing the artist's name
+        city: A str representing the city in which the artist is from
+        state: A str representing the state in which the artist is from
+        phone: A str representing the artist's phone number
+        website: A str repersenting the artist's website
+        facebook_link: A str representing a link to the artist's facebook page
+        seeking_venue: A bool indicating whether the artist is seeking a venue
+        seeking_description: A str describing what type of venue the artist is
+            seeking if seeking_venue bool is set to True
+        image_link: A str represening a link to an image of the artist
+        past_shows: A list of Show obects representing shows that have been
+            performed by the artist
+        upcoming_shows: A list of Show object representing shows that are
+            slated to be performed by the artist
+    """
+
     __tablename__ = 'Artist'
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String)
-    city = db.Column(db.String(120))
-    state = db.Column(db.String(120))
+    name = db.Column(db.String, nullable=False)
+    city = db.Column(db.String(120), nullable=False)
+    state = db.Column(db.String(120), nullable=False)
     phone = db.Column(db.String(120))
-    genres = db.Column(db.String(120))
-    image_link = db.Column(db.String(500))
+    website = db.Column(db.String(120))
     facebook_link = db.Column(db.String(120))
+    seeking_venue = db.Column(db.Boolean, nullable=False, default=False)
+    seeking_description = db.Column(db.String(500))
+    image_link = db.Column(db.String(500))
+    past_shows = db.relationship('Show', backref='artist')
+    upcoming_shows = db.relationship('Show', backref='artist')
 
     # TODO: implement any missing fields, as a database migration using
     #       Flask-Migrate
