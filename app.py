@@ -130,6 +130,20 @@ class Show(db.Model):
     )
 
 
+class Genre(db.Model):
+    """A model representing an genre
+
+    Attributes:
+        id: A unique identifer for the genre object
+        name: A str representing the name of the genre
+    """
+
+    __tablename__ = 'Genre'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(120), nullable=False)
+
+
 # ----------------------------------------------------------------------------#
 # Filters
 # ----------------------------------------------------------------------------#
