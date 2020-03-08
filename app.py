@@ -103,11 +103,32 @@ class Artist(db.Model):
     past_shows = db.relationship('Show', backref='artist')
     upcoming_shows = db.relationship('Show', backref='artist')
 
-    # TODO: implement any missing fields, as a database migration using
-    #       Flask-Migrate
 
-# TODO: Implement Show and Artist models, and complete all model relationships
-#       and properties, as a database migration.
+class Show(db.Model):
+    """A model representing an show
+
+    Attributes:
+        id: A unique identifer for the show object
+        venue_id: The id of the venue that the show was at
+        artist_id: The id of the artist that performed at the show
+        start_time: A datetime that represents the start time of the show
+    """
+
+    __tablename__ = 'Show'
+
+    id = db.Column(db.Integer, primary_key=True)
+    venue_id = db.Column(db.Integer, db.ForeignKey('Venue.id'), nullable=False)
+    artist_id = db.Column(
+        db.Integer,
+        db.ForeignKey('Artist.id'),
+        nullable=False
+    )
+    start_time = db.Column(
+        db.DateTime,
+        nullable=False,
+        default=db.func.now()  # pylint: disable=E1103
+    )
+
 
 # ----------------------------------------------------------------------------#
 # Filters
