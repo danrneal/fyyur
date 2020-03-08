@@ -26,6 +26,38 @@ db = SQLAlchemy(app)
 # Models
 # ----------------------------------------------------------------------------#
 
+venue_genres = db.Table(
+    'VenueGenres',
+    db.Column(
+        'venue_id',
+        db.Integer,
+        db.ForeignKey('Venue.id'),
+        primary_key=True
+    ),
+    db.Column(
+        'genre_id',
+        db.Integer,
+        db.ForeignKey('Genre.id'),
+        primary_key=True
+    )
+)
+
+artist_genres = db.Table(
+    'ArtistGenres',
+    db.Column(
+        'artist_id',
+        db.Integer,
+        db.ForeignKey('Artist.id'),
+        primary_key=True
+    ),
+    db.Column(
+        'genre_id',
+        db.Integer,
+        db.ForeignKey('Genre.id'),
+        primary_key=True
+    )
+)
+
 
 class Venue(db.Model):
     """A model representing a venue
@@ -33,6 +65,8 @@ class Venue(db.Model):
     Attributes:
         id: A unique identifer for the venue object
         name: A str representing the venue's name
+        genres: A list of Genre objects representing what genres are played at
+            the venue
         address: A str representing the address of the venue
         city: A str representing the city in which the venue is located
         state: A str representing the state in which the venue is located
@@ -54,6 +88,7 @@ class Venue(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
+    genres = db.relationship('Genre', secondary=venue_genres, backref='venue')
     address = db.Column(db.String(120), nullable=False)
     city = db.Column(db.String(120), nullable=False)
     state = db.Column(db.String(120), nullable=False)
@@ -73,6 +108,8 @@ class Artist(db.Model):
     Attributes:
         id: A unique identifer for the artist object
         name: A str representing the artist's name
+        genres: A list of Genre objects representing what genres the artist
+            plays
         city: A str representing the city in which the artist is from
         state: A str representing the state in which the artist is from
         phone: A str representing the artist's phone number
@@ -92,6 +129,11 @@ class Artist(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
+    genres = db.relationship(
+        'Genre',
+        secondary=artist_genres,
+        backref='artist'
+    )
     city = db.Column(db.String(120), nullable=False)
     state = db.Column(db.String(120), nullable=False)
     phone = db.Column(db.String(120))
