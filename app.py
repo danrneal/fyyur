@@ -28,19 +28,43 @@ db = SQLAlchemy(app)
 
 
 class Venue(db.Model):
+    """A model representing a venue
+
+    Attributes:
+        id: A unique identifer for the venue object
+        name: A str representing the venue's name
+        address: A str representing the address of the venue
+        city: A str representing the city in which the venue is located
+        state: A str representing the state in which the venue is located
+        phone: A str representing the phone number for the venue
+        website: A str repersenting the website for the venue
+        facebook_link: A str representing a link to the venue's facebook page
+        seeking_talent: A bool indicating whether the venue is seeking artists
+            or not
+        seeking_description: A str describing what type of artist the venue is
+            seeking if seeking_talent bool is set to True
+        image_link: A str represening a link to an image of the venue
+        past_shows: A list of Show obects representing shows that have been
+            performed at the venue
+        upcoming_shows: A list of Show object representing shows that are
+            slated to be performed at the venue
+    """
+
     __tablename__ = 'Venue'
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String)
-    city = db.Column(db.String(120))
-    state = db.Column(db.String(120))
-    address = db.Column(db.String(120))
+    name = db.Column(db.String, nullable=False)
+    address = db.Column(db.String(120), nullable=False)
+    city = db.Column(db.String(120), nullable=False)
+    state = db.Column(db.String(120), nullable=False)
     phone = db.Column(db.String(120))
-    image_link = db.Column(db.String(500))
+    website = db.Column(db.String(120))
     facebook_link = db.Column(db.String(120))
-
-    # TODO: implement any missing fields, as a database migration using
-    #       Flask-Migrate
+    seeking_talent = db.Column(db.Boolean, nullable=False, default=False)
+    seeking_description = db.Column(db.String(500))
+    image_link = db.Column(db.String(500))
+    past_shows = db.relationship('Show', backref='venue')
+    upcoming_shows = db.relationship('Show', backref='venue')
 
 
 class Artist(db.Model):
