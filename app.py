@@ -78,10 +78,8 @@ class Venue(db.Model):
         seeking_description: A str describing what type of artist the venue is
             seeking if seeking_talent bool is set to True
         image_link: A str represening a link to an image of the venue
-        past_shows: A list of Show obects representing shows that have been
-            performed at the venue
-        upcoming_shows: A list of Show object representing shows that are
-            slated to be performed at the venue
+        shows: A list of Show obects representing shows that are assciated
+            with the venue
     """
 
     __tablename__ = 'Venue'
@@ -98,8 +96,7 @@ class Venue(db.Model):
     seeking_talent = db.Column(db.Boolean, nullable=False, default=False)
     seeking_description = db.Column(db.String(500))
     image_link = db.Column(db.String(500))
-    past_shows = db.relationship('Show', backref='venue')
-    upcoming_shows = db.relationship('Show', backref='venue')
+    shows = db.relationship('Show', backref='venue')
 
 
 class Artist(db.Model):
@@ -119,10 +116,8 @@ class Artist(db.Model):
         seeking_description: A str describing what type of venue the artist is
             seeking if seeking_venue bool is set to True
         image_link: A str represening a link to an image of the artist
-        past_shows: A list of Show obects representing shows that have been
-            performed by the artist
-        upcoming_shows: A list of Show object representing shows that are
-            slated to be performed by the artist
+        shows: A list of Show obects representing shows that are assciated
+            with the artist
     """
 
     __tablename__ = 'Artist'
@@ -142,8 +137,7 @@ class Artist(db.Model):
     seeking_venue = db.Column(db.Boolean, nullable=False, default=False)
     seeking_description = db.Column(db.String(500))
     image_link = db.Column(db.String(500))
-    past_shows = db.relationship('Show', backref='artist')
-    upcoming_shows = db.relationship('Show', backref='artist')
+    shows = db.relationship('Show', backref='artist')
 
 
 class Show(db.Model):
