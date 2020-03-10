@@ -182,10 +182,10 @@ class Genre(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120), nullable=False)
 
+
 # ----------------------------------------------------------------------------#
 # Filters
 # ----------------------------------------------------------------------------#
-
 
 def format_datetime(value, datetime_format='medium'):
     """Converts a datetime str to a format that is understood by the db
@@ -790,6 +790,10 @@ def create_artist_submission():
     return render_template('pages/home.html')
 
 
+#  Delete Artist
+#  ----------------------------------------------------------------
+
+
 #  Shows
 #  ----------------------------------------------------------------
 
@@ -854,6 +858,9 @@ def shows():
     return render_template('pages/shows.html', shows=data)
 
 
+#  Create Show
+#  ----------------------------------------------------------------
+
 @app.route('/shows/create')
 def create_show_form():
     """Displays the form for creating a show
@@ -905,6 +912,10 @@ def create_show_submission():
     return render_template('pages/home.html')
 
 
+# ----------------------------------------------------------------------------#
+# Error Handlers
+# ----------------------------------------------------------------------------#
+
 @app.errorhandler(404)
 def not_found_error(error):
     return render_template('errors/404.html'), 404
@@ -914,6 +925,10 @@ def not_found_error(error):
 def server_error(error):
     return render_template('errors/500.html'), 500
 
+
+# ----------------------------------------------------------------------------#
+# Debug
+# ----------------------------------------------------------------------------#
 
 if not app.debug:
     file_handler = FileHandler('error.log')
