@@ -818,6 +818,38 @@ def create_artist_submission():
 #  Delete Artist
 #  ----------------------------------------------------------------
 
+@app.route('/artists/<artist_id>', methods=['DELETE'])
+def delete_artist(artist_id):
+    """Route handler to delete a artist from the db
+
+    Args:
+        artist_id: A str representing the id of the artist to delete
+
+    Returns:
+        A redirect to the homepage
+    """
+
+    error = False
+
+    try:
+        artist = Artist.query.get(artist_id)
+        db.session.delete(artist)
+        db.session.commit()
+        name = artist.name
+    except Exception:  # pylint: disable=broad-except
+        error = True
+        db.session.rollback()
+        print(sys.exc_info())
+    finally:
+        db.session.close()
+
+    if error:
+        flash(f'Artist {name} was unable to be deleted!', 'error')
+        abort(500)
+
+    flash(f'Artist {name} was successfully deleted!')
+    return redirect(url_for('index'))
+
 
 #  Shows
 #  ----------------------------------------------------------------
