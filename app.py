@@ -716,6 +716,12 @@ def edit_venue_submission(venue_id):
 
 @app.route('/artists/create', methods=['GET'])
 def create_artist_form():
+    """Displays the form for creating an artist
+
+    Returns:
+        A html template for the artist form
+    """
+
     form = ArtistForm()
     return render_template('forms/new_artist.html', form=form)
 
