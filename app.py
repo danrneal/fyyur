@@ -205,10 +205,10 @@ def format_datetime(value, datetime_format='medium'):
 
 app.jinja_env.filters['datetime'] = format_datetime  # pylint: disable=E1101
 
+
 # ----------------------------------------------------------------------------#
 # Controllers
 # ----------------------------------------------------------------------------#
-
 
 @app.route('/')
 def index():
@@ -389,15 +389,15 @@ def show_venue(venue_id):
             "start_time": "2035-04-15T20:00:00.000Z"
         }],
         "past_shows_count": 1,
-        "upcoming_shows_count": 1,
+        "upcoming_shows_count": 3,
     }
     data = list(filter(lambda d: d['id'] ==
                        venue_id, [data1, data2, data3]))[0]
     return render_template('pages/show_venue.html', venue=data)
 
+
 #  Create Venue
 #  ----------------------------------------------------------------
-
 
 @app.route('/venues/create', methods=['GET'])
 def create_venue_form():
@@ -431,6 +431,7 @@ def delete_venue(venue_id):
 
 #  Artists
 #  ----------------------------------------------------------------
+
 @app.route('/artists')
 def artists():
     # TODO: replace with real data returned from querying the database
@@ -580,8 +581,10 @@ def show_artist(artist_id):
                        artist_id, [data1, data2, data3]))[0]
     return render_template('pages/show_artist.html', artist=data)
 
+
 #  Update
 #  ----------------------------------------------------------------
+
 @app.route('/artists/<int:artist_id>/edit', methods=['GET'])
 def edit_artist(artist_id):
     form = ArtistForm()
@@ -648,9 +651,9 @@ def edit_venue_submission(venue_id):
     #       venue record with ID <venue_id> using the new attributes
     return redirect(url_for('show_venue', venue_id=venue_id))
 
+
 #  Create Artist
 #  ----------------------------------------------------------------
-
 
 @app.route('/artists/create', methods=['GET'])
 def create_artist_form():
