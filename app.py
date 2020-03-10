@@ -852,8 +852,13 @@ def shows():
 
 
 @app.route('/shows/create')
-def create_shows():
-    # renders form. do not touch.
+def create_show_form():
+    """Displays the form for creating a show
+
+    Returns:
+        A html template for the show form
+    """
+
     form = ShowForm()
     return render_template('forms/new_show.html', form=form)
 
