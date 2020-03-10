@@ -808,7 +808,7 @@ def create_artist_submission():
         db.session.close()
 
     if error:
-        flash(f'Artist {name} was could not be listed!')
+        flash(f'Artist {name} was could not be listed!', 'error')
         abort(500)
 
     flash(f'Artist {name} was successfully listed!')
@@ -918,7 +918,7 @@ def shows():
 #  Create Show
 #  ----------------------------------------------------------------
 
-@app.route('/shows/create')
+@app.route('/shows/create', methods=['GET'])
 def create_show_form():
     """Displays the form for creating a show
 
