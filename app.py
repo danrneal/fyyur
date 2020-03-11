@@ -813,7 +813,7 @@ def create_show_submission():
     """Creates a new show in the db from a form submission
 
     Returns:
-        The template for the homepage
+        A redirect to the shows page
     """
 
     error = False
@@ -845,7 +845,7 @@ def create_show_submission():
 
     flash(f'Show was successfully listed!')
 
-    return render_template('pages/home.html')
+    return redirect(url_for('shows'))
 
 
 # ----------------------------------------------------------------------------#
