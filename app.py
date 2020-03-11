@@ -165,7 +165,7 @@ class Show(db.Model):
     start_time = db.Column(
         db.DateTime,
         nullable=False,
-        default=db.func.now()  # pylint: disable=E1103
+        default=db.func.now()  # pylint: disable=no-member
     )
 
 
@@ -996,10 +996,10 @@ if not app.debug:
     file_handler.setFormatter(Formatter(
         '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'
     ))
-    app.logger.setLevel(logging.INFO)  # pylint: disable=E1103
+    app.logger.setLevel(logging.INFO)  # pylint: disable=no-member
     file_handler.setLevel(logging.INFO)
-    app.logger.addHandler(file_handler)  # pylint: disable=E1103
-    app.logger.info('errors')  # pylint: disable=E1103
+    app.logger.addHandler(file_handler)  # pylint: disable=no-member
+    app.logger.info('errors')  # pylint: disable=no-member
 
 # ----------------------------------------------------------------------------#
 # Launch.
