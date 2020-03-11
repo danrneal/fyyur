@@ -460,6 +460,7 @@ def create_venue_submission():
         )
         db.session.add(venue)
         db.session.commit()
+        venue_id = venue.id
 
     except Exception:  # pylint: disable=broad-except
         error = True
@@ -475,7 +476,7 @@ def create_venue_submission():
 
     flash(f'Venue {name} was successfully listed!')
 
-    return render_template('pages/home.html')
+    return redirect(url_for('show_venue', venue_id=venue_id))
 
 
 #  Delete Venue
@@ -715,6 +716,7 @@ def create_artist_submission():
         )
         db.session.add(artist)
         db.session.commit()
+        artist_id = artist.id
 
     except Exception:  # pylint: disable=broad-except
         error = True
@@ -730,7 +732,7 @@ def create_artist_submission():
 
     flash(f'Artist {name} was successfully listed!')
 
-    return render_template('pages/home.html')
+    return redirect(url_for('show_artist', artist_id=artist_id))
 
 
 #  Delete Artist
