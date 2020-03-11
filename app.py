@@ -433,8 +433,58 @@ def edit_venue(venue_id):
 
 @app.route('/venues/<int:venue_id>/edit', methods=['POST'])
 def edit_venue_submission(venue_id):
-    # TODO: take values from the form submitted, and update existing
-    #       venue record with ID <venue_id> using the new attributes
+    """Updates an existing venue in the db from a form submission
+
+    Args:
+        venue_id: A str representing the id of the venue to update
+
+    Returns:
+        The template for the venue's detail page
+    """
+
+    error = False
+
+    try:
+
+        genres = []
+        genre_names = request.form.getlist('genres')
+        for genre_name in genre_names:
+            genre = Genre.query.filter_by(name=genre_name).first()
+            if not genre:
+                genre = Genre(name=genre_name)
+                db.session.add(genre)
+            genres.append(genre)
+
+        name = request.form.get('name')
+        venue = Venue.query.get(venue_id)
+        venue.name = name
+        venue.genres = genres
+        venue.name = request.form.get('name')
+        venue.address = request.form.get('address')
+        venue.city = request.form.get('city')
+        venue.state = request.form.get('state')
+        venue.phone = request.form.get('phone')
+        venue.website = request.form.get('website')
+        venue.facebook_link = request.form.get('facebook_link')
+        venue.seeking_talent = request.form.get('seeking_talent')
+        venue.seeking_description = request.form.get('seeking_description')
+        venue.image_link = request.form.get('image_link')
+        db.session.commit()
+
+    except Exception:  # pylint: disable=broad-except
+        error = True
+        db.session.rollback()
+        print(sys.exc_info())
+
+    finally:
+        db.session.close()
+
+    if error:
+        flash(f'Venue {name} was unable to be updated!', 'error')
+        abort(500)
+
+    flash(f'Venue {name} was successfully updated!')
+
     return redirect(url_for('show_venue', venue_id=venue_id))
 
 
