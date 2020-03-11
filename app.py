@@ -778,8 +778,55 @@ def edit_artist(artist_id):
 
 @app.route('/artists/<int:artist_id>/edit', methods=['POST'])
 def edit_artist_submission(artist_id):
-    # TODO: take values from the form submitted, and update existing
-    #       artist record with ID <artist_id> using the new attributes
+    """Updates an existing artist in the db from a form submission
+
+    Args:
+        artist_id: A str representing the id of the artist to update
+
+    Returns:
+        The template for the artist's detail page
+    """
+
+    error = False
+
+    try:
+
+        genres = []
+        genre_names = request.form.getlist('genres')
+        for genre_name in genre_names:
+            genre = Genre.query.filter_by(name=genre_name).first()
+            if not genre:
+                genre = Genre(name=genre_name)
+                db.session.add(genre)
+            genres.append(genre)
+
+        name = request.form.get('name')
+        artist = Artist.query.get(artist_id)
+        artist.name = name
+        artist.genres = genres
+        artist.city = request.form.get('city')
+        artist.state = request.form.get('state')
+        artist.phone = request.form.get('phone')
+        artist.website = request.form.get('website')
+        artist.facebook_link = request.form.get('facebook_link')
+        artist.seeking_talent = request.form.get('seeking_talent')
+        artist.seeking_description = request.form.get('seeking_description')
+        artist.image_link = request.form.get('image_link')
+        db.session.commit()
+
+    except Exception:  # pylint: disable=broad-except
+        error = True
+        db.session.rollback()
+        print(sys.exc_info())
+
+    finally:
+        db.session.close()
+
+    if error:
+        flash(f'Artist {name} was unable to be updated!', 'error')
+        abort(500)
+
+    flash(f'Artist {name} was successfully updated!')
 
     return redirect(url_for('show_artist', artist_id=artist_id))
 
