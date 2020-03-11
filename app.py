@@ -109,7 +109,11 @@ class Venue(db.Model):
     seeking_talent = db.Column(db.Boolean, nullable=False, default=False)
     seeking_description = db.Column(db.String(500))
     image_link = db.Column(db.String(500))
-    shows = db.relationship('Show', backref='venue')
+    shows = db.relationship(
+        'Show',
+        backref='venue',
+        cascade="all, delete-orphan"
+    )
 
     def __repr__(self):
         return self.name
@@ -153,7 +157,11 @@ class Artist(db.Model):
     seeking_venue = db.Column(db.Boolean, nullable=False, default=False)
     seeking_description = db.Column(db.String(500))
     image_link = db.Column(db.String(500))
-    shows = db.relationship('Show', backref='artist')
+    shows = db.relationship(
+        'Show',
+        backref='artist',
+        cascade="all, delete-orphan"
+    )
 
     def __repr__(self):
         return self.name
