@@ -969,7 +969,8 @@ def create_show_submission():
         flash(f'Show was unable to be listed!', 'error')
         abort(500)
 
-    flash(f'Venue was successfully listed!')
+    flash(f'Show was successfully listed!')
+
     return render_template('pages/home.html')
 
 
