@@ -5,6 +5,7 @@
 from datetime import datetime
 import logging
 from logging import Formatter, FileHandler
+import os
 import sys
 import babel
 import dateutil.parser
@@ -896,13 +897,7 @@ if not app.debug:
 # Launch.
 # ----------------------------------------------------------------------------#
 
-# Default port:
-if __name__ == '__main__':
-    app.run()
-
-# Or specify port manually:
-'''
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port)
-'''
+    host = os.environ.get('HOST', '127.0.0.1')
+    app.run(host=host, port=port)
