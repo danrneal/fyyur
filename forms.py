@@ -217,12 +217,19 @@ class ArtistForm(Form):
             ('Other', 'Other'),
         ]
     )
-    facebook_link = StringField(
-        # TODO implement enum restriction
-        'facebook_link', validators=[URL()]
-    )
+    facebook_link = StringField('facebook_link', validators=[URL()])
+
 
 class ShowForm(Form):
+    """A form representing a show
+
+    Attributes:
+        venue_id: The id of the venue that the show was at
+        artist_id: The id of the artist that performed at the show
+        start_time: A datetime that represents the start time of the show 
+            defaulting to today
+    """
+
     venue_id = StringField('venue_id')
     artist_id = StringField('artist_id')
     start_time = DateTimeField(
