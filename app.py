@@ -101,6 +101,9 @@ class Venue(db.Model):
     image_link = db.Column(db.String(500))
     shows = db.relationship('Show', backref='venue')
 
+    def __repr__(self):
+        return self.name
+
 
 class Artist(db.Model):
     """A model representing an artist
@@ -141,6 +144,9 @@ class Artist(db.Model):
     seeking_description = db.Column(db.String(500))
     image_link = db.Column(db.String(500))
     shows = db.relationship('Show', backref='artist')
+
+    def __repr__(self):
+        return self.name
 
 
 class Show(db.Model):
