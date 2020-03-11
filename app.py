@@ -40,7 +40,7 @@ migrate = Migrate(app, db)
 # ----------------------------------------------------------------------------#
 
 venue_genres = db.Table(
-    'VenueGenres',
+    'venue_genres',
     db.Column(
         'venue_id',
         db.Integer,
@@ -56,7 +56,7 @@ venue_genres = db.Table(
 )
 
 artist_genres = db.Table(
-    'ArtistGenres',
+    'artist_genres',
     db.Column(
         'artist_id',
         db.Integer,
@@ -95,7 +95,7 @@ class Venue(db.Model):
             with the venue
     """
 
-    __tablename__ = 'Venue'
+    __tablename__ = 'venues'
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
@@ -136,7 +136,7 @@ class Artist(db.Model):
             with the artist
     """
 
-    __tablename__ = 'Artist'
+    __tablename__ = 'artists'
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
@@ -169,13 +169,17 @@ class Show(db.Model):
         start_time: A datetime that represents the start time of the show
     """
 
-    __tablename__ = 'Show'
+    __tablename__ = 'shows'
 
     id = db.Column(db.Integer, primary_key=True)
-    venue_id = db.Column(db.Integer, db.ForeignKey('Venue.id'), nullable=False)
+    venue_id = db.Column(
+        db.Integer,
+        db.ForeignKey('venues.id'),
+        nullable=False
+    )
     artist_id = db.Column(
         db.Integer,
-        db.ForeignKey('Artist.id'),
+        db.ForeignKey('artists.id'),
         nullable=False
     )
     start_time = db.Column(
@@ -193,7 +197,7 @@ class Genre(db.Model):
         name: A str representing the name of the genre
     """
 
-    __tablename__ = 'Genre'
+    __tablename__ = 'genres'
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120), nullable=False)
