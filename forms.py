@@ -223,7 +223,7 @@ class ShowForm(Form):
     Attributes:
         venue_id: The id of the venue that the show was at
         artist_id: The id of the artist that performed at the show
-        start_time: A datetime that represents the start time of the show 
+        start_time: A datetime that represents the start time of the show
             defaulting to today
     """
 
