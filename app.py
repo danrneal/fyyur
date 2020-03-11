@@ -387,7 +387,7 @@ def edit_venue_submission(venue_id):
         venue.phone = request.form.get('phone')
         venue.website = request.form.get('website')
         venue.facebook_link = request.form.get('facebook_link')
-        venue.seeking_talent = request.form.get('seeking_talent')
+        venue.seeking_talent = bool(request.form.get('seeking_talent'))
         venue.seeking_description = request.form.get('seeking_description')
         venue.image_link = request.form.get('image_link')
         db.session.commit()
@@ -452,7 +452,7 @@ def create_venue_submission():
         website = request.form.get('website')
         facebook_link = request.form.get('facebook_link')
         seeking_talent = request.form.get('seeking_talent')
-        seeking_description = request.form.get('seeking_description')
+        seeking_description = bool(request.form.get('seeking_description'))
         image_link = request.form.get('image_link')
         venue = Venue(
             name=name,
@@ -645,7 +645,7 @@ def edit_artist_submission(artist_id):
         artist.phone = request.form.get('phone')
         artist.website = request.form.get('website')
         artist.facebook_link = request.form.get('facebook_link')
-        artist.seeking_talent = request.form.get('seeking_talent')
+        artist.seeking_talent = bool(request.form.get('seeking_talent'))
         artist.seeking_description = request.form.get('seeking_description')
         artist.image_link = request.form.get('image_link')
         db.session.commit()
@@ -708,7 +708,7 @@ def create_artist_submission():
         phone = request.form.get('phone')
         website = request.form.get('website')
         facebook_link = request.form.get('facebook_link')
-        seeking_venue = request.form.get('seeking_venue')
+        seeking_venue = bool(request.form.get('seeking_venue'))
         seeking_description = request.form.get('seeking_description')
         image_link = request.form.get('image_link')
         artist = Artist(

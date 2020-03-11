@@ -123,7 +123,10 @@ class VenueForm(Form):
     phone = StringField('phone')
     website = StringField('website', validators=[URL()])
     facebook_link = StringField('facebook_link', validators=[URL()])
-    seeking_talent = BooleanField('seeking_talent')
+    seeking_talent = BooleanField(
+        'seeking_talent',
+        false_values=('', None, False)
+    )
     seeking_description = TextAreaField('seeking_description')
     image_link = StringField('image_link', validators=[URL()])
 
@@ -233,7 +236,10 @@ class ArtistForm(Form):
     phone = StringField('phone')
     website = StringField('website', validators=[URL()])
     facebook_link = StringField('facebook_link', validators=[URL()])
-    seeking_venue = BooleanField('seeking_venue')
+    seeking_venue = BooleanField(
+        'seeking_venue',
+        false_values=('', None, False)
+    )
     seeking_description = TextAreaField('seeking_description')
     image_link = StringField('image_link', validators=[URL()])
 
