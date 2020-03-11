@@ -198,11 +198,14 @@ def format_datetime(value, datetime_format='medium'):
     Returns:
         A date formatted according to the given format
     """
+
     date = dateutil.parser.parse(value)
+
     if datetime_format == 'full':
         datetime_format = "EEEE MMMM, d, y 'at' h:mma"
     elif datetime_format == 'medium':
         datetime_format = "EE MM, dd, y h:mma"
+
     return babel.dates.format_datetime(date, datetime_format)
 
 
@@ -270,6 +273,7 @@ def search_venues():
             "num_upcoming_shows": 0,
         }]
     }
+
     return render_template(
         'pages/search_venues.html',
         results=response,
@@ -446,7 +450,6 @@ def create_venue_form():
     Returns:
         A html template for the venue form
     """
-
     form = VenueForm()
     return render_template('forms/new_venue.html', form=form)
 
@@ -511,6 +514,7 @@ def create_venue_submission():
         abort(500)
 
     flash(f'Venue {name} was successfully listed!')
+
     return render_template('pages/home.html')
 
 
@@ -584,6 +588,7 @@ def search_artists():
             "num_upcoming_shows": 0,
         }]
     }
+
     return render_template(
         'pages/search_artists.html',
         results=response,
@@ -749,7 +754,6 @@ def create_artist_form():
     Returns:
         A html template for the artist form
     """
-
     form = ArtistForm()
     return render_template('forms/new_artist.html', form=form)
 
@@ -812,6 +816,7 @@ def create_artist_submission():
         abort(500)
 
     flash(f'Artist {name} was successfully listed!')
+
     return render_template('pages/home.html')
 
 
@@ -925,7 +930,6 @@ def create_show_form():
     Returns:
         A html template for the show form
     """
-
     form = ShowForm()
     return render_template('forms/new_show.html', form=form)
 
