@@ -380,11 +380,9 @@ def edit_venue_submission(venue_id):
                 db.session.add(genre)
             genres.append(genre)
 
-        name = request.form.get('name')
         venue = Venue.query.get(venue_id)
-        venue.name = name
-        venue.genres = genres
         venue.name = request.form.get('name')
+        venue.genres = genres
         venue.address = request.form.get('address')
         venue.city = request.form.get('city')
         venue.state = request.form.get('state')
@@ -395,6 +393,7 @@ def edit_venue_submission(venue_id):
         venue.seeking_description = request.form.get('seeking_description')
         venue.image_link = request.form.get('image_link')
         db.session.commit()
+        venue_name = venue.name
 
     except Exception:  # pylint: disable=broad-except
         error = True
@@ -405,10 +404,10 @@ def edit_venue_submission(venue_id):
         db.session.close()
 
     if error:
-        flash(f'Venue {name} was unable to be updated!', 'error')
+        flash(f'Venue {venue_name} was unable to be updated!', 'error')
         abort(500)
 
-    flash(f'Venue {name} was successfully updated!')
+    flash(f'Venue {venue_name} was successfully updated!')
 
     return redirect(url_for('show_venue', venue_id=venue_id))
 
@@ -448,32 +447,23 @@ def create_venue_submission():
                 db.session.add(genre)
             genres.append(genre)
 
-        name = request.form.get('name')
-        address = request.form.get('address')
-        city = request.form.get('city')
-        state = request.form.get('state')
-        phone = request.form.get('phone')
-        website = request.form.get('website')
-        facebook_link = request.form.get('facebook_link')
-        seeking_talent = request.form.get('seeking_talent')
-        seeking_description = bool(request.form.get('seeking_description'))
-        image_link = request.form.get('image_link')
         venue = Venue(
-            name=name,
+            name=request.form.get('name'),
             genres=genres,
-            address=address,
-            city=city,
-            state=state,
-            phone=phone,
-            website=website,
-            facebook_link=facebook_link,
-            seeking_talent=seeking_talent,
-            seeking_description=seeking_description,
-            image_link=image_link
+            address=request.form.get('address'),
+            city=request.form.get('city'),
+            state=request.form.get('state'),
+            phone=request.form.get('phone'),
+            website=request.form.get('website'),
+            facebook_link=request.form.get('facebook_link'),
+            seeking_talent=request.form.get('seeking_talent'),
+            seeking_description=bool(request.form.get('seeking_description')),
+            image_link=request.form.get('image_link')
         )
         db.session.add(venue)
         db.session.commit()
         venue_id = venue.id
+        venue_name = venue.name
 
     except Exception:  # pylint: disable=broad-except
         error = True
@@ -484,10 +474,10 @@ def create_venue_submission():
         db.session.close()
 
     if error:
-        flash(f'Venue {name} was unable to be listed!', 'error')
+        flash(f'Venue {venue_name} was unable to be listed!', 'error')
         abort(500)
 
-    flash(f'Venue {name} was successfully listed!')
+    flash(f'Venue {venue_name} was successfully listed!')
 
     return redirect(url_for('show_venue', venue_id=venue_id))
 
@@ -640,9 +630,8 @@ def edit_artist_submission(artist_id):
                 db.session.add(genre)
             genres.append(genre)
 
-        name = request.form.get('name')
         artist = Artist.query.get(artist_id)
-        artist.name = name
+        artist.name = request.form.get('name')
         artist.genres = genres
         artist.city = request.form.get('city')
         artist.state = request.form.get('state')
@@ -653,6 +642,7 @@ def edit_artist_submission(artist_id):
         artist.seeking_description = request.form.get('seeking_description')
         artist.image_link = request.form.get('image_link')
         db.session.commit()
+        artist_name = artist.name
 
     except Exception:  # pylint: disable=broad-except
         error = True
@@ -663,10 +653,10 @@ def edit_artist_submission(artist_id):
         db.session.close()
 
     if error:
-        flash(f'Artist {name} was unable to be updated!', 'error')
+        flash(f'Artist {artist_name} was unable to be updated!', 'error')
         abort(500)
 
-    flash(f'Artist {name} was successfully updated!')
+    flash(f'Artist {artist_name} was successfully updated!')
 
     return redirect(url_for('show_artist', artist_id=artist_id))
 
@@ -706,30 +696,22 @@ def create_artist_submission():
                 db.session.add(genre)
             genres.append(genre)
 
-        name = request.form.get('name')
-        city = request.form.get('city')
-        state = request.form.get('state')
-        phone = request.form.get('phone')
-        website = request.form.get('website')
-        facebook_link = request.form.get('facebook_link')
-        seeking_venue = bool(request.form.get('seeking_venue'))
-        seeking_description = request.form.get('seeking_description')
-        image_link = request.form.get('image_link')
         artist = Artist(
-            name=name,
+            name=request.form.get('name'),
             genres=genres,
-            city=city,
-            state=state,
-            phone=phone,
-            website=website,
-            facebook_link=facebook_link,
-            seeking_venue=seeking_venue,
-            seeking_description=seeking_description,
-            image_link=image_link
+            city=request.form.get('city'),
+            state=request.form.get('state'),
+            phone=request.form.get('phone'),
+            website=request.form.get('website'),
+            facebook_link=request.form.get('facebook_link'),
+            seeking_venue=bool(request.form.get('seeking_venue')),
+            seeking_description=request.form.get('seeking_description'),
+            image_link=request.form.get('image_link')
         )
         db.session.add(artist)
         db.session.commit()
         artist_id = artist.id
+        artist_name = artist.name
 
     except Exception:  # pylint: disable=broad-except
         error = True
@@ -740,10 +722,10 @@ def create_artist_submission():
         db.session.close()
 
     if error:
-        flash(f'Artist {name} was could not be listed!', 'error')
+        flash(f'Artist {artist_name} was could not be listed!', 'error')
         abort(500)
 
-    flash(f'Artist {name} was successfully listed!')
+    flash(f'Artist {artist_name} was successfully listed!')
 
     return redirect(url_for('show_artist', artist_id=artist_id))
 
