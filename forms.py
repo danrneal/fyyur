@@ -6,19 +6,25 @@ from wtforms import (
 from wtforms.validators import DataRequired, URL
 
 
-class ShowForm(Form):
-    artist_id = StringField(
-        'artist_id'
-    )
-    venue_id = StringField(
-        'venue_id'
-    )
-    start_time = DateTimeField(
-        'start_time',
-        validators=[DataRequired()],
-        default=datetime.today()
-    )
+class VenueForm(Form):
+    """A form representing a venue
 
+    Attributes:
+        name: A str representing the venue's name
+        genres: A list of Genre objects representing what genres are played at
+            the venue
+        address: A str representing the address of the venue
+        city: A str representing the city in which the venue is located
+        state: A str representing the state in which the venue is located
+        phone: A str representing the phone number for the venue
+        website: A str repersenting the website for the venue
+        facebook_link: A str representing a link to the venue's facebook page
+        seeking_talent: A bool indicating whether the venue is seeking artists
+            or not
+        seeking_description: A str describing what type of artist the venue is
+            seeking if seeking_talent bool is set to True
+        image_link: A str represening a link to an image of the venue
+    """
 
 class VenueForm(Form):
     name = StringField(
