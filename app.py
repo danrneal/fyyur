@@ -489,7 +489,7 @@ def delete_venue(venue_id):
         venue_id: A str representing the id of the venue to delete
 
     Returns:
-        A redirect to the homepage
+        A redirect to the venues page
     """
 
     error = False
@@ -744,7 +744,7 @@ def delete_artist(artist_id):
         artist_id: A str representing the id of the artist to delete
 
     Returns:
-        A redirect to the homepage
+        A redirect to the artists page
     """
 
     error = False
