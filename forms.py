@@ -120,14 +120,53 @@ class VenueForm(Form):
 
 
 class ArtistForm(Form):
-    name = StringField(
-        'name', validators=[DataRequired()]
+    """A form representing an artist
+
+    Attributes:
+        name: A str representing the artist's name
+        genres: A list of Genre objects representing what genres the artist
+            plays
+        city: A str representing the city in which the artist is from
+        state: A str representing the state in which the artist is from
+        phone: A str representing the artist's phone number
+        website: A str repersenting the artist's website
+        facebook_link: A str representing a link to the artist's facebook page
+        seeking_venue: A bool indicating whether the artist is seeking a venue
+        seeking_description: A str describing what type of venue the artist is
+            seeking if seeking_venue bool is set to True
+        image_link: A str represening a link to an image of the artist
+    """
+
+    name = StringField('name', validators=[DataRequired()])
+    genres = SelectMultipleField(
+        'genres',
+        validators=[DataRequired()],
+        choices=[
+            ('Alternative', 'Alternative'),
+            ('Blues', 'Blues'),
+            ('Classical', 'Classical'),
+            ('Country', 'Country'),
+            ('Electronic', 'Electronic'),
+            ('Folk', 'Folk'),
+            ('Funk', 'Funk'),
+            ('Hip-Hop', 'Hip-Hop'),
+            ('Heavy Metal', 'Heavy Metal'),
+            ('Instrumental', 'Instrumental'),
+            ('Jazz', 'Jazz'),
+            ('Musical Theatre', 'Musical Theatre'),
+            ('Pop', 'Pop'),
+            ('Punk', 'Punk'),
+            ('R&B', 'R&B'),
+            ('Reggae', 'Reggae'),
+            ('Rock n Roll', 'Rock n Roll'),
+            ('Soul', 'Soul'),
+            ('Other', 'Other'),
+        ]
     )
-    city = StringField(
-        'city', validators=[DataRequired()]
-    )
+    city = StringField('city', validators=[DataRequired()])
     state = SelectField(
-        'state', validators=[DataRequired()],
+        'state',
+        validators=[DataRequired()],
         choices=[
             ('AL', 'AL'),
             ('AK', 'AK'),
@@ -182,39 +221,12 @@ class ArtistForm(Form):
             ('WY', 'WY'),
         ]
     )
-    phone = StringField(
-        # TODO implement validation logic for state
-        'phone'
-    )
-    image_link = StringField(
-        'image_link'
-    )
-    genres = SelectMultipleField(
-        # TODO implement enum restriction
-        'genres', validators=[DataRequired()],
-        choices=[
-            ('Alternative', 'Alternative'),
-            ('Blues', 'Blues'),
-            ('Classical', 'Classical'),
-            ('Country', 'Country'),
-            ('Electronic', 'Electronic'),
-            ('Folk', 'Folk'),
-            ('Funk', 'Funk'),
-            ('Hip-Hop', 'Hip-Hop'),
-            ('Heavy Metal', 'Heavy Metal'),
-            ('Instrumental', 'Instrumental'),
-            ('Jazz', 'Jazz'),
-            ('Musical Theatre', 'Musical Theatre'),
-            ('Pop', 'Pop'),
-            ('Punk', 'Punk'),
-            ('R&B', 'R&B'),
-            ('Reggae', 'Reggae'),
-            ('Rock n Roll', 'Rock n Roll'),
-            ('Soul', 'Soul'),
-            ('Other', 'Other'),
-        ]
-    )
+    phone = StringField('phone')
+    website = StringField('website', validators=[URL()])
     facebook_link = StringField('facebook_link', validators=[URL()])
+    seeking_venue = BooleanField('seeking_venue')
+    seeking_description = StringField('seeking_description')
+    image_link = StringField('image_link', validators=[URL()])
 
 
 class ShowForm(Form):
