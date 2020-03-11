@@ -1,3 +1,11 @@
+"""Form objects for venue, artist, and show
+
+    Usage:
+        form = VenueForm(obj=None)
+        form = ArtistForm(obj=None)
+        form = ShowForm(obj=None)
+"""
+
 from datetime import datetime
 from flask_wtf import Form
 from wtforms import (
