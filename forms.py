@@ -222,4 +222,11 @@ class ArtistForm(Form):
         'facebook_link', validators=[URL()]
     )
 
-# TODO IMPLEMENT NEW ARTIST FORM AND NEW SHOW FORM
+class ShowForm(Form):
+    venue_id = StringField('venue_id')
+    artist_id = StringField('artist_id')
+    start_time = DateTimeField(
+        'start_time',
+        validators=[DataRequired()],
+        default=datetime.today()
+    )
