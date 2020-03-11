@@ -979,12 +979,28 @@ def create_show_submission():
 # ----------------------------------------------------------------------------#
 
 @app.errorhandler(404)
-def not_found_error(error):
+def not_found_error(error):  # pylint: disable=unused-argument
+    """Error handler for 404 not found
+
+    Args:
+        error: unused
+
+    Returns:
+        A custom template for the error message
+    """
     return render_template('errors/404.html'), 404
 
 
 @app.errorhandler(500)
-def server_error(error):
+def server_error(error):  # pylint: disable=unused-argument
+    """Error handler for 500 internal server error
+
+    Args:
+        error: unused
+
+    Returns:
+        A custom template for the error message
+    """
     return render_template('errors/500.html'), 500
 
 
