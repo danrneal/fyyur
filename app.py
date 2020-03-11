@@ -160,7 +160,7 @@ class Artist(db.Model):
 
 
 class Show(db.Model):
-    """A model representing an show
+    """A model representing a show
 
     Attributes:
         id: A unique identifer for the show object
