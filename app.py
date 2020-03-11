@@ -599,7 +599,8 @@ def delete_venue(venue_id):
         abort(500)
 
     flash(f'Venue {name} was successfully deleted!')
-    return redirect(url_for('index'))
+
+    return redirect(url_for('venues'))
 
 
 #  Artists
@@ -901,7 +902,8 @@ def delete_artist(artist_id):
         abort(500)
 
     flash(f'Artist {name} was successfully deleted!')
-    return redirect(url_for('index'))
+
+    return redirect(url_for('artists'))
 
 
 #  Shows
