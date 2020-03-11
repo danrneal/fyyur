@@ -44,13 +44,13 @@ venue_genres = db.Table(
     db.Column(
         'venue_id',
         db.Integer,
-        db.ForeignKey('Venue.id'),
+        db.ForeignKey('venues.id'),
         primary_key=True
     ),
     db.Column(
         'genre_id',
         db.Integer,
-        db.ForeignKey('Genre.id'),
+        db.ForeignKey('genres.id'),
         primary_key=True
     )
 )
@@ -60,13 +60,13 @@ artist_genres = db.Table(
     db.Column(
         'artist_id',
         db.Integer,
-        db.ForeignKey('Artist.id'),
+        db.ForeignKey('artists.id'),
         primary_key=True
     ),
     db.Column(
         'genre_id',
         db.Integer,
-        db.ForeignKey('Genre.id'),
+        db.ForeignKey('genres.id'),
         primary_key=True
     )
 )
