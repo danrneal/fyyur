@@ -841,23 +841,17 @@ def create_show_submission():
     error = False
 
     try:
-
-        venue_id = request.form.get('venue_id')
-        artist_id = request.form.get('artist_id')
-        start_time = request.form.get('start_time')
         show = Show(
-            venue_id=venue_id,
-            artist_id=artist_id,
-            start_time=start_time
+            venue_id=request.form.get('venue_id'),
+            artist_id=request.form.get('artist_id'),
+            start_time=request.form.get('start_time')
         )
         db.session.add(show)
         db.session.commit()
-
     except Exception:  # pylint: disable=broad-except
         error = True
         db.session.rollback()
         print(sys.exc_info())
-
     finally:
         db.session.close()
 
