@@ -81,8 +81,7 @@ class Venue(db.Model):
         genres: A list of Genre objects representing what genres are played at
             the venue
         address: A str representing the address of the venue
-        city: A str representing the city in which the venue is located
-        state: A str representing the state in which the venue is located
+        area_id: The id of the area the venue is located in
         phone: A str representing the phone number for the venue
         website: A str repersenting the website for the venue
         facebook_link: A str representing a link to the venue's facebook page
@@ -101,8 +100,7 @@ class Venue(db.Model):
     name = db.Column(db.String, nullable=False)
     genres = db.relationship('Genre', secondary=venue_genres, backref='venue')
     address = db.Column(db.String(120), nullable=False)
-    city = db.Column(db.String(120), nullable=False)
-    state = db.Column(db.String(120), nullable=False)
+    area_id = db.Column(db.Integer, db.ForeignKey('areas.id'), nullable=False)
     phone = db.Column(db.String(120))
     website = db.Column(db.String(120))
     facebook_link = db.Column(db.String(120))
@@ -127,8 +125,7 @@ class Artist(db.Model):
         name: A str representing the artist's name
         genres: A list of Genre objects representing what genres the artist
             plays
-        city: A str representing the city in which the artist is from
-        state: A str representing the state in which the artist is from
+        area_id: The id of the area the artist is based out of
         phone: A str representing the artist's phone number
         website: A str repersenting the artist's website
         facebook_link: A str representing a link to the artist's facebook page
@@ -149,8 +146,7 @@ class Artist(db.Model):
         secondary=artist_genres,
         backref='artist'
     )
-    city = db.Column(db.String(120), nullable=False)
-    state = db.Column(db.String(120), nullable=False)
+    area_id = db.Column(db.Integer, db.ForeignKey('areas.id'), nullable=False)
     phone = db.Column(db.String(120))
     website = db.Column(db.String(120))
     facebook_link = db.Column(db.String(120))
@@ -214,6 +210,29 @@ class Genre(db.Model):
         return self.name
 
 
+class Area(db.Model):
+    """A model representing a city, state
+
+    Attributes:
+        id: A unique identifier for the area object
+        city: A str representing the city in the area object
+        state: A str representing the state in the are object
+        venues: A list of venues located in the city, state
+        artists: A list of artists that are based out of city, state
+    """
+
+    __tablename__ = 'areas'
+
+    id = db.Column(db.Integer, primary_key=True)
+    city = db.Column(db.String(120), nullable=False)
+    state = db.Column(db.String(120), nullable=False)
+    venues = db.relationship('Venue', backref='area')
+    artists = db.relationship('Artist', backref='area')
+
+    def __repr__(self):
+        return f'{self.city, self.state}'
+
+
 # ----------------------------------------------------------------------------#
 # Filters
 # ----------------------------------------------------------------------------#
@@ -242,10 +261,10 @@ def format_datetime(value, datetime_format='medium'):
 
 app.jinja_env.filters['datetime'] = format_datetime  # pylint: disable=E1101
 
-
 # ----------------------------------------------------------------------------#
 # Controllers
 # ----------------------------------------------------------------------------#
+
 
 @app.route('/')
 def index():
