@@ -18,7 +18,7 @@ import sys
 import babel
 import dateutil.parser
 from flask import (
-    Flask, render_template, request, flash, redirect, url_for, abort
+    Flask, render_template, request, flash, redirect, url_for, abort, jsonify
 )
 from flask_migrate import Migrate
 from flask_moment import Moment
@@ -526,16 +526,17 @@ def delete_venue(venue_id):
         venue_id: A str representing the id of the venue to delete
 
     Returns:
-        A redirect to the venues page
+        response: A json object signalling the deletion request was successful
     """
 
     error = False
 
     try:
         venue = Venue.query.get(venue_id)
+        venue_name = venue.name
         db.session.delete(venue)
         db.session.commit()
-        name = venue.name
+        response = {'success': True}
     except Exception:  # pylint: disable=broad-except
         error = True
         db.session.rollback()
@@ -544,12 +545,12 @@ def delete_venue(venue_id):
         db.session.close()
 
     if error:
-        flash(f'Venue {name} was unable to be deleted!', 'error')
+        flash(f'Venue {venue_name} was unable to be deleted!', 'error')
         abort(500)
 
-    flash(f'Venue {name} was successfully deleted!')
+    flash(f'Venue {venue_name} was successfully deleted!')
 
-    return redirect(url_for('venues'))
+    return jsonify(response)
 
 
 #  Artists
@@ -798,16 +799,17 @@ def delete_artist(artist_id):
         artist_id: A str representing the id of the artist to delete
 
     Returns:
-        A redirect to the artists page
+        response: A json object signalling the deletion request was successful
     """
 
     error = False
 
     try:
         artist = Artist.query.get(artist_id)
+        artist_name = artist.name
         db.session.delete(artist)
         db.session.commit()
-        name = artist.name
+        response = {'success': True}
     except Exception:  # pylint: disable=broad-except
         error = True
         db.session.rollback()
@@ -816,12 +818,12 @@ def delete_artist(artist_id):
         db.session.close()
 
     if error:
-        flash(f'Artist {name} was unable to be deleted!', 'error')
+        flash(f'Artist {artist_name} was unable to be deleted!', 'error')
         abort(500)
 
-    flash(f'Artist {name} was successfully deleted!')
+    flash(f'Artist {artist_name} was successfully deleted!')
 
-    return redirect(url_for('artists'))
+    return jsonify(response)
 
 
 #  Shows
