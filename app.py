@@ -349,8 +349,14 @@ def search_venues():
         A template with the search results
     """
     search_term = request.form.get('search_term', '')
+    areas = Area.query.filter(
+        Area.city.ilike(f'%{search_term}%') |  # pylint: disable=no-member
+        Area.state.ilike(f'%{search_term}%')  # pylint: disable=no-member
+    ).all()
+    area_ids = [area.id for area in areas]
     data = Venue.query.filter(
-        Venue.name.ilike(f'%{search_term}%')  # pylint: disable=no-member
+        Venue.name.ilike(f'%{search_term}%') |  # pylint: disable=no-member
+        Venue.area_id.in_(area_ids)  # pylint: disable=no-member
     ).all()
     results = {
         'count': len(data),
@@ -584,8 +590,14 @@ def search_artists():
         A template with the search results
     """
     search_term = request.form.get('search_term', '')
+    areas = Area.query.filter(
+        Area.city.ilike(f'%{search_term}%') |  # pylint: disable=no-member
+        Area.state.ilike(f'%{search_term}%')  # pylint: disable=no-member
+    ).all()
+    area_ids = [area.id for area in areas]
     data = Artist.query.filter(
-        Artist.name.ilike(f'%{search_term}%')  # pylint: disable=no-member
+        Artist.name.ilike(f'%{search_term}%') |  # pylint: disable=no-member
+        Venue.area_id.in_(area_ids)  # pylint: disable=no-member
     ).all()
     results = {
         'count': len(data),
