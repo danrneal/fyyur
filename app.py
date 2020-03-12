@@ -230,7 +230,7 @@ class Area(db.Model):
     artists = db.relationship('Artist', backref='area')
 
     def __repr__(self):
-        return f'{self.city, self.state}'
+        return f'{self.city}, {self.state}'
 
 
 # ----------------------------------------------------------------------------#
