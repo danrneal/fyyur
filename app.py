@@ -686,7 +686,7 @@ def edit_artist_submission(artist_id):
         artist.phone = request.form.get('phone')
         artist.website = request.form.get('website')
         artist.facebook_link = request.form.get('facebook_link')
-        artist.seeking_talent = bool(request.form.get('seeking_talent'))
+        artist.seeking_venue = bool(request.form.get('seeking_venue'))
         artist.seeking_description = request.form.get('seeking_description')
         artist.image_link = request.form.get('image_link')
         db.session.commit()
