@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: a612119b128b
+Revision ID: 991fc139cb41
 Revises: 
-Create Date: 2020-03-11 14:04:50.284835
+Create Date: 2020-03-12 10:00:03.688848
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'a612119b128b'
+revision = '991fc139cb41'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -22,12 +22,14 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('city', sa.String(length=120), nullable=False),
     sa.Column('state', sa.String(length=120), nullable=False),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('city', 'state')
     )
     op.create_table('genres',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=120), nullable=False),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('name')
     )
     op.create_table('artists',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -40,7 +42,8 @@ def upgrade():
     sa.Column('seeking_description', sa.String(length=500), nullable=True),
     sa.Column('image_link', sa.String(length=500), nullable=True),
     sa.ForeignKeyConstraint(['area_id'], ['areas.id'], ),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('name', 'area_id')
     )
     op.create_table('venues',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -54,7 +57,8 @@ def upgrade():
     sa.Column('seeking_description', sa.String(length=500), nullable=True),
     sa.Column('image_link', sa.String(length=500), nullable=True),
     sa.ForeignKeyConstraint(['area_id'], ['areas.id'], ),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('name', 'address', 'area_id')
     )
     op.create_table('artist_genres',
     sa.Column('artist_id', sa.Integer(), nullable=False),
@@ -70,7 +74,8 @@ def upgrade():
     sa.Column('start_time', sa.DateTime(), nullable=False),
     sa.ForeignKeyConstraint(['artist_id'], ['artists.id'], ),
     sa.ForeignKeyConstraint(['venue_id'], ['venues.id'], ),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('venue_id', 'artist_id', 'start_time')
     )
     op.create_table('venue_genres',
     sa.Column('venue_id', sa.Integer(), nullable=False),

@@ -95,6 +95,7 @@ class Venue(db.Model):
     """
 
     __tablename__ = 'venues'
+    __table_args__ = (db.UniqueConstraint('name', 'address', 'area_id'),)
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
@@ -138,6 +139,7 @@ class Artist(db.Model):
     """
 
     __tablename__ = 'artists'
+    __table_args__ = (db.UniqueConstraint('name', 'area_id'),)
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
@@ -174,6 +176,9 @@ class Show(db.Model):
     """
 
     __tablename__ = 'shows'
+    __table_args__ = (
+        db.UniqueConstraint('venue_id', 'artist_id', 'start_time'),
+    )
 
     id = db.Column(db.Integer, primary_key=True)
     venue_id = db.Column(
@@ -204,7 +209,7 @@ class Genre(db.Model):
     __tablename__ = 'genres'
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(120), nullable=False)
+    name = db.Column(db.String(120), nullable=False, unique=True)
 
     def __repr__(self):
         return self.name
@@ -222,6 +227,7 @@ class Area(db.Model):
     """
 
     __tablename__ = 'areas'
+    __table_args__ = (db.UniqueConstraint('city', 'state'),)
 
     id = db.Column(db.Integer, primary_key=True)
     city = db.Column(db.String(120), nullable=False)
