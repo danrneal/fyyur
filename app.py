@@ -286,28 +286,10 @@ def venues():
     Returns:
         A template for all venues populated with venues grouped by city, state
     """
-
-    data = []
-    areas = Venue.query.with_entities(
-        Venue.city,
-        Venue.state
-    ).group_by(
-        Venue.city,
-        Venue.state
+    areas = Area.query.filter(
+        Area.venues != None  # noqa, pylint: disable=singleton-comparison
     ).all()
-
-    for area in areas:
-        area_venues = Venue.query.filter_by(
-            city=area.city,
-            state=area.state
-        ).all()
-        data.append({
-            "city": area.city,
-            "state": area.state,
-            "venues": area_venues
-        })
-
-    return render_template('pages/venues.html', areas=data)
+    return render_template('pages/venues.html', areas=areas)
 
 
 @app.route('/venues/search', methods=['POST'])
@@ -345,6 +327,8 @@ def show_venue(venue_id):
     """
 
     venue = Venue.query.get(venue_id)
+    venue.city = venue.area.city
+    venue.state = venue.area.state
     venue.past_shows = []
     venue.upcoming_shows = []
 
@@ -378,6 +362,8 @@ def edit_venue(venue_id):
         A html template for the venue form which has been pre-populated
     """
     venue = Venue.query.get(venue_id)
+    venue.city = venue.area.city
+    venue.state = venue.area.state
     form = VenueForm(obj=venue)
 
     return render_template('forms/edit_venue.html', form=form, venue=venue)
@@ -407,12 +393,23 @@ def edit_venue_submission(venue_id):
                 db.session.add(genre)
             genres.append(genre)
 
+        city = request.form.get('city')
+        state = request.form.get('state')
+        area = Area.query.filter(
+            Area.city == city,
+            Area.state == state
+        ).first()
+        if not area:
+            area = Area(city=city, state=state)
+            db.session.add(area)
+            db.session.flush()
+
+        venue_name = request.form.get('name')
         venue = Venue.query.get(venue_id)
-        venue.name = request.form.get('name')
+        venue.name = venue_name
         venue.genres = genres
         venue.address = request.form.get('address')
-        venue.city = request.form.get('city')
-        venue.state = request.form.get('state')
+        venue.area_id = area.id
         venue.phone = request.form.get('phone')
         venue.website = request.form.get('website')
         venue.facebook_link = request.form.get('facebook_link')
@@ -420,7 +417,6 @@ def edit_venue_submission(venue_id):
         venue.seeking_description = request.form.get('seeking_description')
         venue.image_link = request.form.get('image_link')
         db.session.commit()
-        venue_name = venue.name
 
     except Exception:  # pylint: disable=broad-except
         error = True
@@ -474,12 +470,23 @@ def create_venue_submission():
                 db.session.add(genre)
             genres.append(genre)
 
+        city = request.form.get('city')
+        state = request.form.get('state')
+        area = Area.query.filter(
+            Area.city == city,
+            Area.state == state
+        ).first()
+        if not area:
+            area = Area(city=city, state=state)
+            db.session.add(area)
+            db.session.flush()
+
+        venue_name = request.form.get('name')
         venue = Venue(
-            name=request.form.get('name'),
+            name=venue_name,
             genres=genres,
             address=request.form.get('address'),
-            city=request.form.get('city'),
-            state=request.form.get('state'),
+            area_id=area.id,
             phone=request.form.get('phone'),
             website=request.form.get('website'),
             facebook_link=request.form.get('facebook_link'),
@@ -490,7 +497,6 @@ def create_venue_submission():
         db.session.add(venue)
         db.session.commit()
         venue_id = venue.id
-        venue_name = venue.name
 
     except Exception:  # pylint: disable=broad-except
         error = True
@@ -595,6 +601,8 @@ def show_artist(artist_id):
     """
 
     artist = Artist.query.get(artist_id)
+    artist.city = artist.area.city
+    artist.state = artist.area.state
     artist.past_shows = []
     artist.upcoming_shows = []
 
@@ -628,6 +636,8 @@ def edit_artist(artist_id):
         A html template for the artist form which has been pre-populated
     """
     artist = Artist.query.get(artist_id)
+    artist.city = artist.area.city
+    artist.state = artist.area.state
     form = ArtistForm(obj=artist)
 
     return render_template('forms/edit_artist.html', form=form, artist=artist)
@@ -657,11 +667,22 @@ def edit_artist_submission(artist_id):
                 db.session.add(genre)
             genres.append(genre)
 
+        city = request.form.get('city')
+        state = request.form.get('state')
+        area = Area.query.filter(
+            Area.city == city,
+            Area.state == state
+        ).first()
+        if not area:
+            area = Area(city=city, state=state)
+            db.session.add(area)
+            db.session.flush()
+
+        artist_name = request.form.get('name')
         artist = Artist.query.get(artist_id)
-        artist.name = request.form.get('name')
+        artist.name = artist_name
         artist.genres = genres
-        artist.city = request.form.get('city')
-        artist.state = request.form.get('state')
+        artist.area_id = area.id
         artist.phone = request.form.get('phone')
         artist.website = request.form.get('website')
         artist.facebook_link = request.form.get('facebook_link')
@@ -669,7 +690,6 @@ def edit_artist_submission(artist_id):
         artist.seeking_description = request.form.get('seeking_description')
         artist.image_link = request.form.get('image_link')
         db.session.commit()
-        artist_name = artist.name
 
     except Exception:  # pylint: disable=broad-except
         error = True
@@ -723,11 +743,22 @@ def create_artist_submission():
                 db.session.add(genre)
             genres.append(genre)
 
+        city = request.form.get('city')
+        state = request.form.get('state')
+        area = Area.query.filter(
+            Area.city == city,
+            Area.state == state
+        ).first()
+        if not area:
+            area = Area(city=city, state=state)
+            db.session.add(area)
+            db.session.flush()
+
+        artist_name = request.form.get('name')
         artist = Artist(
-            name=request.form.get('name'),
+            name=artist_name,
             genres=genres,
-            city=request.form.get('city'),
-            state=request.form.get('state'),
+            area_id=area.id,
             phone=request.form.get('phone'),
             website=request.form.get('website'),
             facebook_link=request.form.get('facebook_link'),
@@ -738,7 +769,6 @@ def create_artist_submission():
         db.session.add(artist)
         db.session.commit()
         artist_id = artist.id
-        artist_name = artist.name
 
     except Exception:  # pylint: disable=broad-except
         error = True
