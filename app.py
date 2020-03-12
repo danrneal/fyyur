@@ -261,10 +261,59 @@ def format_datetime(value, datetime_format='medium'):
 
 app.jinja_env.filters['datetime'] = format_datetime  # pylint: disable=E1101
 
+
+# ----------------------------------------------------------------------------#
+# Helpers
+# ----------------------------------------------------------------------------#
+
+def get_genres(genre_names):
+    """Gets a list of genre objects from a list of genre names
+
+    Args:
+        genre_names: A list of strs representing the names of genres
+
+    Returns:
+        genres: A list of genre objects corresponding the the genre names
+            passed in
+    """
+
+    genres = []
+
+    for genre_name in genre_names:
+        genre = Genre.query.filter_by(name=genre_name).first()
+        if not genre:
+            genre = Genre(name=genre_name)
+            db.session.add(genre)
+        genres.append(genre)
+
+    return genres
+
+
+def get_area_id(city, state):
+    """Gets the area id of an area from a city and state
+
+    Args:
+        city: A str representing the city of an area object
+        state: A str representing the state of an area object
+
+    Returns:
+        area_id: An int representing the id of the area object cooresponding
+            to a city and state
+    """
+
+    area = Area.query.filter(Area.city == city, Area.state == state).first()
+
+    if not area:
+        area = Area(city=city, state=state)
+        db.session.add(area)
+        db.session.flush()
+
+    return area.id
+
+
 # ----------------------------------------------------------------------------#
 # Controllers
 # ----------------------------------------------------------------------------#
-
 
 @app.route('/')
 def index():
@@ -383,33 +432,14 @@ def edit_venue_submission(venue_id):
     error = False
 
     try:
-
-        genres = []
-        genre_names = request.form.getlist('genres')
-        for genre_name in genre_names:
-            genre = Genre.query.filter_by(name=genre_name).first()
-            if not genre:
-                genre = Genre(name=genre_name)
-                db.session.add(genre)
-            genres.append(genre)
-
+        venue_name = request.form.get('name')
         city = request.form.get('city')
         state = request.form.get('state')
-        area = Area.query.filter(
-            Area.city == city,
-            Area.state == state
-        ).first()
-        if not area:
-            area = Area(city=city, state=state)
-            db.session.add(area)
-            db.session.flush()
-
-        venue_name = request.form.get('name')
         venue = Venue.query.get(venue_id)
         venue.name = venue_name
-        venue.genres = genres
+        venue.genres = get_genres(request.form.getlist('genres'))
         venue.address = request.form.get('address')
-        venue.area_id = area.id
+        venue.area_id = get_area_id(city, state)
         venue.phone = request.form.get('phone')
         venue.website = request.form.get('website')
         venue.facebook_link = request.form.get('facebook_link')
@@ -417,12 +447,10 @@ def edit_venue_submission(venue_id):
         venue.seeking_description = request.form.get('seeking_description')
         venue.image_link = request.form.get('image_link')
         db.session.commit()
-
     except Exception:  # pylint: disable=broad-except
         error = True
         db.session.rollback()
         print(sys.exc_info())
-
     finally:
         db.session.close()
 
@@ -460,33 +488,14 @@ def create_venue_submission():
     error = False
 
     try:
-
-        genres = []
-        genre_names = request.form.getlist('genres')
-        for genre_name in genre_names:
-            genre = Genre.query.filter_by(name=genre_name).first()
-            if not genre:
-                genre = Genre(name=genre_name)
-                db.session.add(genre)
-            genres.append(genre)
-
+        venue_name = request.form.get('name')
         city = request.form.get('city')
         state = request.form.get('state')
-        area = Area.query.filter(
-            Area.city == city,
-            Area.state == state
-        ).first()
-        if not area:
-            area = Area(city=city, state=state)
-            db.session.add(area)
-            db.session.flush()
-
-        venue_name = request.form.get('name')
         venue = Venue(
             name=venue_name,
-            genres=genres,
+            genres=get_genres(request.form.getlist('genres')),
             address=request.form.get('address'),
-            area_id=area.id,
+            area_id=get_area_id(city, state),
             phone=request.form.get('phone'),
             website=request.form.get('website'),
             facebook_link=request.form.get('facebook_link'),
@@ -658,32 +667,13 @@ def edit_artist_submission(artist_id):
     error = False
 
     try:
-
-        genres = []
-        genre_names = request.form.getlist('genres')
-        for genre_name in genre_names:
-            genre = Genre.query.filter_by(name=genre_name).first()
-            if not genre:
-                genre = Genre(name=genre_name)
-                db.session.add(genre)
-            genres.append(genre)
-
+        artist_name = request.form.get('name')
         city = request.form.get('city')
         state = request.form.get('state')
-        area = Area.query.filter(
-            Area.city == city,
-            Area.state == state
-        ).first()
-        if not area:
-            area = Area(city=city, state=state)
-            db.session.add(area)
-            db.session.flush()
-
-        artist_name = request.form.get('name')
         artist = Artist.query.get(artist_id)
         artist.name = artist_name
-        artist.genres = genres
-        artist.area_id = area.id
+        artist.genres = get_genres(request.form.getlist('genres'))
+        artist.area_id = get_area_id(city, state)
         artist.phone = request.form.get('phone')
         artist.website = request.form.get('website')
         artist.facebook_link = request.form.get('facebook_link')
@@ -691,12 +681,10 @@ def edit_artist_submission(artist_id):
         artist.seeking_description = request.form.get('seeking_description')
         artist.image_link = request.form.get('image_link')
         db.session.commit()
-
     except Exception:  # pylint: disable=broad-except
         error = True
         db.session.rollback()
         print(sys.exc_info())
-
     finally:
         db.session.close()
 
@@ -734,32 +722,13 @@ def create_artist_submission():
     error = False
 
     try:
-
-        genres = []
-        genre_names = request.form.getlist('genres')
-        for genre_name in genre_names:
-            genre = Genre.query.filter_by(name=genre_name).first()
-            if not genre:
-                genre = Genre(name=genre_name)
-                db.session.add(genre)
-            genres.append(genre)
-
+        artist_name = request.form.get('name')
         city = request.form.get('city')
         state = request.form.get('state')
-        area = Area.query.filter(
-            Area.city == city,
-            Area.state == state
-        ).first()
-        if not area:
-            area = Area(city=city, state=state)
-            db.session.add(area)
-            db.session.flush()
-
-        artist_name = request.form.get('name')
         artist = Artist(
             name=artist_name,
-            genres=genres,
-            area_id=area.id,
+            genres=get_genres(request.form.getlist('genres')),
+            area_id=get_area_id(city, state),
             phone=request.form.get('phone'),
             website=request.form.get('website'),
             facebook_link=request.form.get('facebook_link'),
@@ -770,12 +739,10 @@ def create_artist_submission():
         db.session.add(artist)
         db.session.commit()
         artist_id = artist.id
-
     except Exception:  # pylint: disable=broad-except
         error = True
         db.session.rollback()
         print(sys.exc_info())
-
     finally:
         db.session.close()
 
