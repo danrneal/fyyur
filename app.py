@@ -490,8 +490,8 @@ def create_venue_submission():
             phone=request.form.get('phone'),
             website=request.form.get('website'),
             facebook_link=request.form.get('facebook_link'),
-            seeking_talent=request.form.get('seeking_talent'),
-            seeking_description=bool(request.form.get('seeking_description')),
+            seeking_talent=bool(request.form.get('seeking_talent')),
+            seeking_description=request.form.get('seeking_description'),
             image_link=request.form.get('image_link')
         )
         db.session.add(venue)
