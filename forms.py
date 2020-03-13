@@ -12,11 +12,15 @@ from wtforms import (
     StringField, SelectField, SelectMultipleField, DateTimeField, BooleanField,
     TextAreaField, IntegerField
 )
-from wtforms.validators import DataRequired, URL, Regexp, Optional, AnyOf
+from wtforms.compat import text_type
+from wtforms.validators import (
+    DataRequired, URL, Regexp, Optional, AnyOf, ValidationError
+)
+
 
 genres = [
     'Alternative', 'Blues', 'Classical', 'Country', 'Electronic', 'Folk',
-    'Funk', 'Hip-Hop', 'Heavy Metal', 'Heavy Metal', 'Instrumental', 'Jazz',
+    'Funk', 'Hip-Hop', 'Heavy Metal', 'Instrumental', 'Jazz',
     'Musical Theatre', 'Pop', 'Punk', 'R&B', 'Reggae', 'Rock n Roll', 'Soul',
     'Swing', 'Other'
 ]
@@ -27,6 +31,49 @@ states = [
     'MS', 'MO', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VT', 'VA', 'WA',
     'WV', 'WI', 'WY'
 ]
+
+
+class AnyOfMultiple(object):
+    """Compares all the incoming data to a sequence of valid inputs.
+
+    Attributes:
+        values: A sequence of valid inputs
+        message: Error message to raise in case of a validation error.
+            `%(values)s` contains the list of values.
+        values_formatter: Function used to format the list of values in the
+            error message.
+    """
+
+    def __init__(self, values, message=None, values_formatter=None):
+        self.values = values
+        self.message = message
+        if values_formatter is None:
+            values_formatter = self.default_values_formatter
+        self.values_formatter = values_formatter
+
+    def __call__(self, form, field):
+
+        for value in field.data:
+            if value not in self.values:
+
+                message = self.message
+                if message is None:
+                    message = field.gettext(
+                        "Invalid value, must be one of: %(values)s."
+                    )
+
+                raise ValidationError(
+                    message % dict(values=self.values_formatter(self.values))
+                )
+
+    @staticmethod
+    def default_values_formatter(values):
+        """Function used to format the list of values in the error message.
+
+        Args:
+            values: A sequence of valid inputs
+        """
+        return ", ".join(text_type(x) for x in values)
 
 
 class VenueForm(Form):
@@ -55,7 +102,13 @@ class VenueForm(Form):
     )
     genres = SelectMultipleField(
         'genres',
-        validators=[DataRequired(message='Please select at least one genre')],
+        validators=[
+            DataRequired(message='Please select at least one genre'),
+            AnyOfMultiple(
+                genres,
+                message="Please only select genres from the list of choices"
+            )
+        ],
         choices=[(genre, genre) for genre in genres]
     )
     address = StringField(
@@ -140,7 +193,13 @@ class ArtistForm(Form):
     )
     genres = SelectMultipleField(
         'genres',
-        validators=[DataRequired(message='Please select at least one genre')],
+        validators=[
+            DataRequired(message='Please select at least one genre'),
+            AnyOfMultiple(
+                genres,
+                message="Please only select genres from the list of choices"
+            )
+        ],
         choices=[(genre, genre) for genre in genres]
     )
     city = StringField(
