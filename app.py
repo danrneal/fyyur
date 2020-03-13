@@ -549,7 +549,7 @@ def edit_venue_submission(venue_id):
     form = VenueForm()
     if not form.validate():
         flash(list(form.errors.values())[0][0], 'error')
-        return redirect(url_for('edit_venue', venue_id=venue_id))
+        return redirect(url_for('edit_venue_form', venue_id=venue_id))
 
     error = False
 
@@ -975,7 +975,7 @@ def edit_artist_submission(artist_id):
     form = ArtistForm()
     if not form.validate():
         flash(list(form.errors.values())[0][0], 'error')
-        return redirect(url_for('edit_artist', artist_id=artist_id))
+        return redirect(url_for('edit_artist_form', artist_id=artist_id))
 
     error = False
 
