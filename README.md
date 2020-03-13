@@ -19,6 +19,12 @@ Install the requirements:
 pip install -r requirements.txt
 ```
 
+Initialize and set up database by starting with an empty database named fyyur and the run:
+
+```shell
+flask db upgrade
+```
+
 ## Usage
 
 Make sure you are in the virtual environment (you should see (venv) before your command prompt). If not `source /venv/bin/activate` to enter it.
