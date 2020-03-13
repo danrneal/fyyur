@@ -518,7 +518,7 @@ def show_venue(venue_id):
 #  ----------------------------------------------------------------
 
 @app.route('/venues/<int:venue_id>/edit', methods=['GET'])
-def edit_venue(venue_id):
+def edit_venue_form(venue_id):
     """Displays the form for editing a venue
 
     Args:
@@ -944,7 +944,7 @@ def delete_unavailability(
 #  ----------------------------------------------------------------
 
 @app.route('/artists/<int:artist_id>/edit', methods=['GET'])
-def edit_artist(artist_id):
+def edit_artist_form(artist_id):
     """Displays the form for editing an artist
 
     Args:
