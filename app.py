@@ -889,7 +889,7 @@ def create_artist_submission():
         db.session.close()
 
     if error:
-        flash(f'Artist {artist_name} was could not be listed!', 'error')
+        flash(f'Artist {artist_name} was unable to be listed!', 'error')
         abort(500)
 
     flash(f'Artist {artist_name} was successfully listed!')
