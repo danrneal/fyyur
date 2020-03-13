@@ -1176,7 +1176,8 @@ def create_show_submission():
                 start_time > str(unavailability.start_time) and
                 start_time < str(unavailability.end_time)
             ):
-                raise Exception
+                flash('Artist is unavailable at selected time')
+                return redirect(url_for('create_show_form'))
 
         show = Show(
             venue_id=venue_id,
