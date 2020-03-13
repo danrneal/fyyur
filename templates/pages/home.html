@@ -22,4 +22,22 @@
 		<img id="front-splash" src="{{ url_for('static',filename='img/front-splash.jpg') }}" alt="Front Photo of Musical Band" />
 	</div>
 </div>
+<section>
+	<h2 class="monospace">Recently Listed</h2>
+	<div class="row">
+		{% for listed in recently_listed %}
+		<div class="col-sm-4">
+			<div class="tile tile-show">
+				<img src="{{ listed.image_link }}" alt="Venue/Artist Image" />
+				<h6>{{ listed.type }}</h6>
+				{% if listed.type == 'Venue' %}
+				<h5><a href="/venues/{{ listed.id }}">{{ listed.name }}</a></h5>
+				{% else %}
+				<h5><a href="/artists/{{ listed.id }}">{{ listed.name }}</a></h5>
+				{% endif %}
+			</div>
+		</div>
+		{% endfor %}
+	</div>
+</section>
 {% endblock %}

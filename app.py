@@ -108,6 +108,11 @@ class Venue(db.Model):
     seeking_talent = db.Column(db.Boolean, nullable=False, default=False)
     seeking_description = db.Column(db.String(500))
     image_link = db.Column(db.String(500))
+    created_at = db.Column(
+        db.DateTime,
+        nullable=False,
+        default=db.func.now()  # pylint: disable=no-member
+    )
     shows = db.relationship(
         'Show',
         backref='venue',
@@ -157,6 +162,11 @@ class Artist(db.Model):
     seeking_venue = db.Column(db.Boolean, nullable=False, default=False)
     seeking_description = db.Column(db.String(500))
     image_link = db.Column(db.String(500))
+    created_at = db.Column(
+        db.DateTime,
+        nullable=False,
+        default=db.func.now()  # pylint: disable=no-member
+    )
     shows = db.relationship(
         'Show',
         backref='artist',
@@ -371,7 +381,31 @@ def index():
     Returns:
         A rendered html template for the homepage
     """
-    return render_template('pages/home.html')
+
+    recent_venues = Venue.query.order_by(
+        db.desc(Venue.created_at)
+    ).limit(9).all()
+    recent_artists = Artist.query.order_by(
+        db.desc(Artist.created_at)
+    ).limit(9).all()
+    recently_listed = []
+
+    while (
+        len(recently_listed) < 9 and
+        (len(recent_artists) > 0 or len(recent_venues) > 0)
+    ):
+        if (
+            len(recent_artists) == 0 or
+            recent_venues[0].created_at > recent_artists[0].created_at
+        ):
+            recent_venues[0].type = 'Venue'
+            recently_listed.append(recent_venues.pop(0))
+        else:
+            recent_artists[0].type = 'Artist'
+            recently_listed.append(recent_artists.pop(0))
+
+    print(recently_listed)
+    return render_template('pages/home.html', recently_listed=recently_listed)
 
 
 #  Venues
