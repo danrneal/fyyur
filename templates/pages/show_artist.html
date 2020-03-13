@@ -48,6 +48,35 @@
 	</div>
 </div>
 <section>
+	<h2 class="monospace">Featured Music</h2>
+	<table class="table table-striped" style="width: 450px;">
+		<tbody>
+		{% for featured in artist.music %}
+			<tr>
+				<th width="100" style="vertical-align: middle;" scope="row">{{ featured.type_ }}</th>
+				<td width="300" style="vertical-align: middle;">{{ featured.title }}</td>
+				<td width="50" align="center" style="color: red;">
+					<button class="btn btn-light btn-sm delete-music" data-artist-id="{{ artist.id }}" data-music-id="{{ featured.id }}">&Cross;</button>
+				</td>
+			</tr>
+		{% endfor %}
+		</tbody>
+	</table>
+	<form action="/artists/{{ artist.id }}/music/create" method="post" class="form">
+		<div class="form-inline">
+			<div class="form-group form-wrapper">
+				<div class="form-group" style="width: 25%;">
+					{{ music_form.type_(class_ = 'form-control', placeholder='Type', autofocus = true) }}
+				</div>
+				<div class="form-group" style="width: 75%;">
+					{{ music_form.title(class_ = 'form-control', placeholder='Title', autofocus = true) }}
+				</div>
+			</div>
+			<input type="submit" value="Add" class="btn btn-primary">
+		</div>
+	</form>
+</section>
+<section>
 	<h2 class="monospace">Unavailability</h2>
 	<table class="table table-striped" style="width: 450px;">
 		<tbody>
@@ -56,7 +85,7 @@
 				<td width="200" style="vertical-align: middle;">From: {{ unavailability.start_time }}</td>
 				<td width="200" style="vertical-align: middle;">To: {{ unavailability.end_time }}</td>
 				<td width="50" align="center" style="color: red;">
-					<button class="btn btn-light btn-sm" id='delete-unavailability' data-artist-id="{{ artist.id }}" data-unavailability-id="{{ unavailability.id }}">&Cross;</button>
+					<button class="btn btn-light btn-sm delete-unavailability" data-artist-id="{{ artist.id }}" data-unavailability-id="{{ unavailability.id }}">&Cross;</button>
 				</td>
 			</tr>
 		{% endfor %}
@@ -66,10 +95,10 @@
 		<div class="form-inline">
 			<div class="form-group form-wrapper">
 				<div class="form-group">
-					{{ form.start_time(class_ = 'form-control', placeholder='Start Time', autofocus = true) }}
+					{{ unavailability_form.start_time(class_ = 'form-control', placeholder='Start Time', autofocus = true) }}
 				</div>
 				<div class="form-group">
-					{{ form.end_time(class_ = 'form-control', placeholder='End Time', autofocus = true) }}
+					{{ unavailability_form.end_time(class_ = 'form-control', placeholder='End Time', autofocus = true) }}
 				</div>
 			</div>
 			<input type="submit" value="Add" class="btn btn-primary">
@@ -117,15 +146,32 @@
 		})
 	}
 
-	const deleteUnavailability = document.querySelector('#delete-unavailability');
-	deleteUnavailability.onclick = function(event) {
-		const artistId = event.target.dataset.artistId;
-		const unavailabilityId = event.target.dataset.unavailabilityId;
-		fetch('/artists/' + artistId + '/unavailability/' + unavailabilityId, {
-			method: 'DELETE'
-		}).then(function () {
-			window.location.replace('/artists/' + artistId);
-		})
+	const deleteFeatured = document.querySelectorAll('.delete-music');
+	for (let i = 0; i < deleteFeatured.length; i++) {
+		const deleteMusic = deleteFeatured[i];
+		deleteMusic.onclick = function(event) {
+			const artistId = event.target.dataset.artistId;
+			const musicId = event.target.dataset.musicId;
+			fetch('/artists/' + artistId + '/music/' + musicId, {
+				method: 'DELETE'
+			}).then(function () {
+				window.location.replace('/artists/' + artistId);
+			})
+		}
+	}
+
+	const deleteUnavailabilities = document.querySelectorAll('.delete-unavailability');
+	for (let i = 0; i < deleteUnavailabilities.length; i++) {
+		const deleteUnavailability = deleteUnavailabilities[i];
+		deleteUnavailability.onclick = function(event) {
+			const artistId = event.target.dataset.artistId;
+			const unavailabilityId = event.target.dataset.unavailabilityId;
+			fetch('/artists/' + artistId + '/unavailability/' + unavailabilityId, {
+				method: 'DELETE'
+			}).then(function () {
+				window.location.replace('/artists/' + artistId);
+			})
+		}
 	}
 
 </script>

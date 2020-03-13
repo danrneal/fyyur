@@ -23,7 +23,9 @@ from flask import (
 from flask_migrate import Migrate
 from flask_moment import Moment
 from flask_sqlalchemy import SQLAlchemy
-from forms import VenueForm, ArtistForm, ShowForm, UnavailabilityForm
+from forms import (
+    VenueForm, ArtistForm, ShowForm, UnavailabilityForm, MusicForm
+)
 
 # ----------------------------------------------------------------------------#
 # App Config
@@ -177,6 +179,11 @@ class Artist(db.Model):
         backref='artist',
         cascade="all, delete-orphan"
     )
+    music = db.relationship(
+        'Music',
+        backref='artist',
+        cascade='all, delete-orphan'
+    )
 
     def __repr__(self):
         return self.name
@@ -254,6 +261,27 @@ class Area(db.Model):
 
     def __repr__(self):
         return f'{self.city}, {self.state}'
+
+
+class Music(db.Model):
+    """A model representing a song or album for an artist
+
+    Attibutes:
+        id: A unique identifier for the music object
+        artist_id: The id of the artist who the made the music
+        type_: A str representing the release type of the music
+        title: A str representing the title of the music
+    """
+    __table_args__ = (db.UniqueConstraint('artist_id', 'type_', 'title'),)
+
+    id = db.Column(db.Integer, primary_key=True)
+    artist_id = db.Column(
+        db.Integer,
+        db.ForeignKey('artists.id'),
+        nullable=False
+    )
+    type_ = db.Column(db.String(120), nullable=False)
+    title = db.Column(db.String(120), nullable=False)
 
 
 class Unavailability(db.Model):
@@ -723,9 +751,93 @@ def show_artist(artist_id):
 
     artist.past_shows_count = len(artist.past_shows)
     artist.upcoming_shows_count = len(artist.upcoming_shows)
-    form = UnavailabilityForm()
+    music_form = MusicForm()
+    unavailability_form = UnavailabilityForm()
 
-    return render_template('pages/show_artist.html', artist=artist, form=form)
+    return render_template(
+        'pages/show_artist.html',
+        artist=artist,
+        music_form=music_form,
+        unavailability_form=unavailability_form
+    )
+
+
+#  Create Music
+
+@app.route('/artists/<int:artist_id>/music/create', methods=['POST'])
+def create_music(artist_id):
+    """Creates a new featured song or album for the artist from form submission
+
+    Returns:
+        The detail view for the artist
+    """
+
+    error = False
+
+    try:
+        music_type = request.form.get('type_')
+        music_title = request.form.get('title')
+        music = Music(
+            artist_id=artist_id,
+            type_=music_type,
+            title=music_title
+        )
+        db.session.add(music)
+        db.session.commit()
+    except Exception:  # pylint: disable=broad-except
+        error = True
+        db.session.rollback()
+        print(sys.exc_info())
+    finally:
+        db.session.close()
+
+    if error:
+        flash(f'{music_type} {music_title} could not be added!', 'error')
+        abort(500)
+
+    flash(f'{music_type} {music_title} was successfully added!')
+
+    return redirect(url_for('show_artist', artist_id=artist_id))
+
+
+#  Delete Music
+
+@app.route('/artists/<int:artist_id>/music/<int:music_id>', methods=['DELETE'])
+def delete_music(artist_id, music_id):  # pylint: disable=unused-argument
+    """Route handler to delete an piece of music for an artist from the db
+
+    Args:
+        artist_id: A str representing the id of the artist who's music is being
+            deleted
+        music_id: A str representing the id of the music to delete
+
+    Returns:
+        response: A json object signalling the deletion request was successful
+    """
+
+    error = False
+
+    try:
+        music = Music.query.get(music_id)
+        music_type = music.type_
+        music_title = music.title
+        db.session.delete(music)
+        db.session.commit()
+        response = {'success': True}
+    except Exception:  # pylint: disable=broad-except
+        error = True
+        db.session.rollback()
+        print(sys.exc_info())
+    finally:
+        db.session.close()
+
+    if error:
+        flash(f'{music_type} {music_title} was unable to be deleted!', 'error')
+        abort(500)
+
+    flash(f'{music_type} {music_title} was successfully deleted!')
+
+    return jsonify(response)
 
 
 #  Create Unavailability

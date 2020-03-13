@@ -274,9 +274,26 @@ class UnavailabilityForm(Form):
         end_time: A datetime that represents the end time of the interval the
             artist is uavailable
     """
+
     start_time = DateTimeField(
         'start_time',
         validators=[DataRequired()],
         default=datetime.today()
     )
     end_time = DateTimeField('end_time', validators=[DataRequired()])
+
+
+class MusicForm(Form):
+    """A form representing a song or album for an artist
+
+    Attributes:
+        type_: A str representing the release type
+        title: A str representing the title of the release
+    """
+
+    type_ = SelectField(
+        'type_',
+        validators=[DataRequired()],
+        choices=[('Album', 'Album'), ('Song', 'Song')]
+    )
+    title = StringField('name', validators=[DataRequired()])
