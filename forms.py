@@ -266,6 +266,14 @@ class ShowForm(Form):
 
 
 class UnavailabilityForm(Form):
+    """A form representing an unavailability for an artist
+
+    Attributes:
+        start_time: A datetime that represents the start time of the interval
+            the artist is unavailable defaulting to today
+        end_time: A datetime that represents the end time of the interval the
+            artist is uavailable
+    """
     start_time = DateTimeField(
         'start_time',
         validators=[DataRequired()],
