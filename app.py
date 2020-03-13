@@ -118,7 +118,7 @@ class Venue(db.Model):
     shows = db.relationship(
         'Show',
         backref='venue',
-        cascade="all, delete-orphan"
+        cascade='all, delete-orphan'
     )
 
     def __repr__(self):
@@ -172,12 +172,12 @@ class Artist(db.Model):
     shows = db.relationship(
         'Show',
         backref='artist',
-        cascade="all, delete-orphan"
+        cascade='all, delete-orphan'
     )
     unavailabilities = db.relationship(
         'Unavailability',
         backref='artist',
-        cascade="all, delete-orphan"
+        cascade='all, delete-orphan'
     )
     music = db.relationship(
         'Music',
