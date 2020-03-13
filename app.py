@@ -537,7 +537,7 @@ def create_venue_submission():
     """Creates a new venue in the db from a form submission
 
     Returns:
-        The template for the homepage
+        The template for a list of all venues
     """
 
     error = False
@@ -858,7 +858,7 @@ def create_artist_submission():
     """Creates a new artist in the db from a form submission
 
     Returns:
-        The template for the homepage
+        The template for a list of all artists
     """
 
     error = False
