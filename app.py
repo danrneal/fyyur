@@ -885,7 +885,7 @@ def create_unavailability(artist_id):
 def delete_unavailability(
     artist_id, unavailability_id  # pylint: disable=unused-argument
 ):
-    """Route handler to delete an availability for an artist from the db
+    """Route handler to delete an unavailability for an artist from the db
 
     Args:
         artist_id: A str representing the id of the artist who's unavailability
