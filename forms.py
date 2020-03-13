@@ -132,7 +132,7 @@ class VenueForm(Form):
         validators=[
             Optional(),
             Regexp(
-                r'^[2-9]\d{2}-\d{3}-\d{4}$',
+                r'^\d{3}-\d{3}-\d{4}$',
                 message='Please enter phone number in the format xxx-xxx-xxxx'
             )
         ]
@@ -219,7 +219,7 @@ class ArtistForm(Form):
         validators=[
             Optional(),
             Regexp(
-                r'^[2-9]\d{2}-\d{3}-\d{4}$',
+                r'^\d{3}-\d{3}-\d{4}$',
                 message='Please enter phone number in the format xxx-xxx-xxxx'
             )
         ]
