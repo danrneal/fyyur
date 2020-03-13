@@ -718,7 +718,7 @@ def search_artists():
     area_ids = [area.id for area in areas]
     data = Artist.query.filter(
         Artist.name.ilike(f'%{search_term}%') |  # pylint: disable=no-member
-        Venue.area_id.in_(area_ids)  # pylint: disable=no-member
+        Artist.area_id.in_(area_ids)  # pylint: disable=no-member
     ).all()
     results = {
         'count': len(data),
