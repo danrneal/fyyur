@@ -263,3 +263,12 @@ class ShowForm(Form):
         validators=[DataRequired()],
         default=datetime.today()
     )
+
+
+class UnavailabilityForm(Form):
+    start_time = DateTimeField(
+        'start_time',
+        validators=[DataRequired()],
+        default=datetime.today()
+    )
+    end_time = DateTimeField('end_time', validators=[DataRequired()])

@@ -23,7 +23,7 @@ from flask import (
 from flask_migrate import Migrate
 from flask_moment import Moment
 from flask_sqlalchemy import SQLAlchemy
-from forms import VenueForm, ArtistForm, ShowForm
+from forms import VenueForm, ArtistForm, ShowForm, UnavailabilityForm
 
 # ----------------------------------------------------------------------------#
 # App Config
@@ -136,6 +136,8 @@ class Artist(db.Model):
         image_link: A str represening a link to an image of the artist
         shows: A list of Show obects representing shows that are assciated
             with the artist
+        unavailabilities: A list of Unavailability objecst representing when
+            the artist is unable to be booked
     """
 
     __tablename__ = 'artists'
@@ -157,6 +159,11 @@ class Artist(db.Model):
     image_link = db.Column(db.String(500))
     shows = db.relationship(
         'Show',
+        backref='artist',
+        cascade="all, delete-orphan"
+    )
+    unavailabilities = db.relationship(
+        'Unavailability',
         backref='artist',
         cascade="all, delete-orphan"
     )
@@ -237,6 +244,42 @@ class Area(db.Model):
 
     def __repr__(self):
         return f'{self.city}, {self.state}'
+
+
+class Unavailability(db.Model):
+    """A model representing an interval of time that an artis is unavailable
+
+    Attributes:
+        id: A unique identifier for the unavailability object
+        artist_id: The id of the artist who is unavailable during this interval
+        start_time: A datetime representing the start of the interval
+        end_time: A datetime representing the end of the interval
+    """
+
+    __tablename__ = 'unavailability'
+    __table_args__ = (
+        db.UniqueConstraint('artist_id', 'start_time', 'end_time'),
+        db.CheckConstraint('start_time < end_time')
+    )
+
+    id = db.Column(db.Integer, primary_key=True)
+    artist_id = db.Column(
+        db.Integer,
+        db.ForeignKey('artists.id'),
+        nullable=False
+    )
+    start_time = db.Column(
+        db.DateTime,
+        nullable=False,
+        default=db.func.now()  # pylint: disable=no-member
+    )
+    end_time = db.Column(
+        db.DateTime,
+        nullable=False
+    )
+
+    def __repr__(self):
+        return (self.start_time, self.end_time)
 
 
 # ----------------------------------------------------------------------------#
@@ -646,8 +689,89 @@ def show_artist(artist_id):
 
     artist.past_shows_count = len(artist.past_shows)
     artist.upcoming_shows_count = len(artist.upcoming_shows)
+    form = UnavailabilityForm()
 
-    return render_template('pages/show_artist.html', artist=artist)
+    return render_template('pages/show_artist.html', artist=artist, form=form)
+
+
+#  Create Unavailability
+
+@app.route('/artists/<int:artist_id>/unavailability/create', methods=['POST'])
+def create_unavailability(artist_id):
+    """Creates a new unavailability for the artist from a form submission
+
+    Returns:
+        The detail view for the artist
+    """
+
+    error = False
+
+    try:
+        unavailability = Unavailability(
+            artist_id=artist_id,
+            start_time=request.form.get('start_time'),
+            end_time=request.form.get('end_time')
+        )
+        db.session.add(unavailability)
+        db.session.commit()
+    except Exception:  # pylint: disable=broad-except
+        error = True
+        db.session.rollback()
+        print(sys.exc_info())
+    finally:
+        db.session.close()
+
+    if error:
+        flash(f'Unavailability could not be added!', 'error')
+        abort(500)
+
+    flash(f'Unavailability was successfully added!')
+
+    return redirect(url_for('show_artist', artist_id=artist_id))
+
+
+# Delete Unavailability
+
+@app.route(
+    '/artists/<int:artist_id>/unavailability/<int:unavailability_id>',
+    methods=['DELETE']
+)
+def delete_unavailability(
+    artist_id, unavailability_id  # pylint: disable=unused-argument
+):
+    """Route handler to delete an availability for an artist from the db
+
+    Args:
+        artist_id: A str representing the id of the artist who's unavailability
+            is being deleted
+        unavailability_id: A str representing the id of the unavailablity to
+            delete
+
+    Returns:
+        response: A json object signalling the deletion request was successful
+    """
+
+    error = False
+
+    try:
+        unavailability = Unavailability.query.get(unavailability_id)
+        db.session.delete(unavailability)
+        db.session.commit()
+        response = {'success': True}
+    except Exception:  # pylint: disable=broad-except
+        error = True
+        db.session.rollback()
+        print(sys.exc_info())
+    finally:
+        db.session.close()
+
+    if error:
+        flash(f'Unavailability was unable to be deleted!', 'error')
+        abort(500)
+
+    flash(f'Unavailability was successfully deleted!')
+
+    return jsonify(response)
 
 
 #  Update Artist
@@ -858,17 +982,34 @@ def create_show_submission():
     error = False
 
     try:
+
+        venue_id = request.form.get('venue_id')
+        artist_id = request.form.get('artist_id')
+        start_time = request.form.get('start_time')
+        unavailabilities = Unavailability.query.filter_by(
+            artist_id=artist_id
+        ).all()
+
+        for unavailability in unavailabilities:
+            if (
+                start_time > str(unavailability.start_time) and
+                start_time < str(unavailability.end_time)
+            ):
+                raise Exception
+
         show = Show(
-            venue_id=request.form.get('venue_id'),
-            artist_id=request.form.get('artist_id'),
-            start_time=request.form.get('start_time')
+            venue_id=venue_id,
+            artist_id=artist_id,
+            start_time=start_time
         )
         db.session.add(show)
         db.session.commit()
+
     except Exception:  # pylint: disable=broad-except
         error = True
         db.session.rollback()
         print(sys.exc_info())
+
     finally:
         db.session.close()
 

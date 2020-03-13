@@ -48,6 +48,35 @@
 	</div>
 </div>
 <section>
+	<h2 class="monospace">Unavailability</h2>
+	<table class="table table-striped" style="width: 450px;">
+		<tbody>
+		{% for unavailability in artist.unavailabilities %}
+			<tr>
+				<td width="200" style="vertical-align: middle;">From: {{ unavailability.start_time }}</td>
+				<td width="200" style="vertical-align: middle;">To: {{ unavailability.end_time }}</td>
+				<td width="50" align="center" style="color: red;">
+					<button class="btn btn-light btn-sm" id='delete-unavailability' data-artist-id="{{ artist.id }}" data-unavailability-id="{{ unavailability.id }}">&Cross;</button>
+				</td>
+			</tr>
+		{% endfor %}
+		</tbody>
+	</table>
+	<form action="/artists/{{ artist.id }}/unavailability/create" method="post" class="form">
+		<div class="form-inline">
+			<div class="form-group form-wrapper">
+				<div class="form-group">
+					{{ form.start_time(class_ = 'form-control', placeholder='Start Time', autofocus = true) }}
+				</div>
+				<div class="form-group">
+					{{ form.end_time(class_ = 'form-control', placeholder='End Time', autofocus = true) }}
+				</div>
+			</div>
+			<input type="submit" value="Add" class="btn btn-primary">
+		</div>
+	</form>
+</section>
+<section>
 	<h2 class="monospace">{{ artist.upcoming_shows_count }} Upcoming {% if artist.upcoming_shows_count == 1 %}Show{% else %}Shows{% endif %}</h2>
 	<div class="row">
 		{%for show in artist.upcoming_shows %}
@@ -77,6 +106,7 @@
 </section>
 
 <script>
+
 	const deleteArtist = document.querySelector('#delete-artist');
 	deleteArtist.onclick = function(event) {
 		const artistId = event.target.dataset.artistId;
@@ -86,6 +116,18 @@
 			window.location.replace('/artists');
 		})
 	}
+
+	const deleteUnavailability = document.querySelector('#delete-unavailability');
+	deleteUnavailability.onclick = function(event) {
+		const artistId = event.target.dataset.artistId;
+		const unavailabilityId = event.target.dataset.unavailabilityId;
+		fetch('/artists/' + artistId + '/unavailability/' + unavailabilityId, {
+			method: 'DELETE'
+		}).then(function () {
+			window.location.replace('/artists/' + artistId);
+		})
+	}
+
 </script>
 
 {% endblock %}
