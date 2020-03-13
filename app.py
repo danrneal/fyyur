@@ -546,6 +546,11 @@ def edit_venue_submission(venue_id):
         The template for the venue's detail page
     """
 
+    form = VenueForm()
+    if not form.validate():
+        flash(list(form.errors.values())[0][0], 'error')
+        return redirect(url_for('edit_venue', venue_id=venue_id))
+
     error = False
 
     try:
@@ -601,6 +606,11 @@ def create_venue_submission():
     Returns:
         The template for a list of all venues
     """
+
+    form = VenueForm()
+    if not form.validate():
+        flash(list(form.errors.values())[0][0], 'error')
+        return redirect(url_for('create_venue_form'))
 
     error = False
 
@@ -772,6 +782,11 @@ def create_music(artist_id):
         The detail view for the artist
     """
 
+    form = MusicForm()
+    if not form.validate():
+        flash(list(form.errors.values())[0][0], 'error')
+        return redirect(url_for('show_artist', artist_id=artist_id))
+
     error = False
 
     try:
@@ -849,6 +864,11 @@ def create_unavailability(artist_id):
     Returns:
         The detail view for the artist
     """
+
+    form = UnavailabilityForm()
+    if not form.validate():
+        flash(list(form.errors.values())[0][0], 'error')
+        return redirect(url_for('show_artist', artist_id=artist_id))
 
     error = False
 
@@ -952,6 +972,11 @@ def edit_artist_submission(artist_id):
         The template for the artist's detail page
     """
 
+    form = ArtistForm()
+    if not form.validate():
+        flash(list(form.errors.values())[0][0], 'error')
+        return redirect(url_for('edit_artist', artist_id=artist_id))
+
     error = False
 
     try:
@@ -1006,6 +1031,11 @@ def create_artist_submission():
     Returns:
         The template for a list of all artists
     """
+
+    form = ArtistForm()
+    if not form.validate():
+        flash(list(form.errors.values())[0][0], 'error')
+        return redirect(url_for('create_artist_form'))
 
     error = False
 
@@ -1124,6 +1154,11 @@ def create_show_submission():
     Returns:
         A redirect to the shows page
     """
+
+    form = ShowForm()
+    if not form.validate():
+        flash(list(form.errors.values())[0][0], 'error')
+        return redirect(url_for('create_show_form'))
 
     error = False
 
