@@ -1,9 +1,15 @@
-"""Form objects for venue, artist, and show
+"""Form objects used used to collect data for the app.
 
-    Usage:
-        form = VenueForm(obj=None)
-        form = ArtistForm(obj=None)
-        form = ShowForm(obj=None)
+    Attributes:
+        genres: A list of strs representing accepted genres
+        states: A list of strs representing accepted states
+
+    Classes:
+        VenueForm(obj=None)
+        ArtistForm(obj=None)
+        ShowForm(obj=None)
+        Unavailability(obj=None)
+        MusicForm(obj=None)
 """
 
 from datetime import datetime
