@@ -184,10 +184,10 @@ class VenueForm(Form):
             DataRequired(message="Please select at least one genre"),
             AnyOfMultiple(
                 genres,
-                message="Please only select genres from the list of choices"
-            )
+                message="Please only select genres from the list of choices",
+            ),
         ],
-        choices=[(genre, genre) for genre in genres]
+        choices=[(genre, genre) for genre in genres],
     )
     address = StringField(
         "address", validators=[DataRequired(message="Please enter an address")]
@@ -201,7 +201,7 @@ class VenueForm(Form):
             DataRequired(message="Please select a state"),
             AnyOf(states, message="Please select a valid state"),
         ],
-        choices=[(state, state) for state in states]
+        choices=[(state, state) for state in states],
     )
     phone = StringField(
         "phone",
@@ -271,10 +271,10 @@ class ArtistForm(Form):
             DataRequired(message="Please select at least one genre"),
             AnyOfMultiple(
                 genres,
-                message="Please only select genres from the list of choices"
-            )
+                message="Please only select genres from the list of choices",
+            ),
         ],
-        choices=[(genre, genre) for genre in genres]
+        choices=[(genre, genre) for genre in genres],
     )
     city = StringField(
         "city", validators=[DataRequired(message="Please enter a city")]
@@ -285,7 +285,7 @@ class ArtistForm(Form):
             DataRequired(message="Please select a state"),
             AnyOf(states, message="Please select a valid state"),
         ],
-        choices=[(state, state) for state in states]
+        choices=[(state, state) for state in states],
     )
     phone = StringField(
         "phone",

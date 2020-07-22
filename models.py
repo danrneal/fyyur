@@ -100,7 +100,7 @@ class Venue(db.Model):
     created_at = db.Column(
         db.DateTime,
         nullable=False,
-        default=db.func.now()  # pylint: disable=no-member
+        default=db.func.now(),  # pylint: disable=no-member
     )
     shows = db.relationship(
         "Show", backref="venue", cascade="all, delete-orphan"
@@ -151,7 +151,7 @@ class Artist(db.Model):
     created_at = db.Column(
         db.DateTime,
         nullable=False,
-        default=db.func.now()  # pylint: disable=no-member
+        default=db.func.now(),  # pylint: disable=no-member
     )
     shows = db.relationship(
         "Show", backref="artist", cascade="all, delete-orphan"
@@ -193,7 +193,7 @@ class Show(db.Model):
     start_time = db.Column(
         db.DateTime,
         nullable=False,
-        default=db.func.now()  # pylint: disable=no-member
+        default=db.func.now(),  # pylint: disable=no-member
     )
 
 
@@ -283,11 +283,7 @@ class Unavailability(db.Model):
     start_time = db.Column(
         db.DateTime,
         nullable=False,
-        default=db.func.now()  # pylint: disable=no-member
-    )
-    end_time = db.Column(
-        db.DateTime,
-        nullable=False
+        default=db.func.now(),  # pylint: disable=no-member
     )
     end_time = db.Column(db.DateTime, nullable=False)
 

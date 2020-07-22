@@ -483,7 +483,7 @@ def show_artist(artist_id):
         "pages/show_artist.html",
         artist=artist,
         music_form=music_form,
-        unavailability_form=unavailability_form
+        unavailability_form=unavailability_form,
     )
 
 
