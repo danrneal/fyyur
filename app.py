@@ -173,7 +173,7 @@ def venues():
         A template for all venues populated with venues grouped by city, state
     """
     areas = Area.query.filter(
-        Area.venues != None  # noqa, pylint: disable=singleton-comparison
+        Area.venues != None  # noqa: E711, pylint: disable=singleton-comparison
     ).all()
     return render_template("pages/venues.html", areas=areas)
 
