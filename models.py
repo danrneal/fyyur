@@ -289,6 +289,7 @@ class Unavailability(db.Model):
         db.DateTime,
         nullable=False
     )
+    end_time = db.Column(db.DateTime, nullable=False)
 
     def __repr__(self):
         """An Unavailability object's str representation."""

@@ -136,22 +136,20 @@ def index():
     Returns:
         A rendered html template for the homepage
     """
-
-    recent_venues = Venue.query.order_by(
-        db.desc(Venue.created_at)
-    ).limit(9).all()
-    recent_artists = Artist.query.order_by(
-        db.desc(Artist.created_at)
-    ).limit(9).all()
+    recent_venues = (
+        Venue.query.order_by(db.desc(Venue.created_at)).limit(9).all()
+    )
+    recent_artists = (
+        Artist.query.order_by(db.desc(Artist.created_at)).limit(9).all()
+    )
     recently_listed = []
 
-    while (
-        len(recently_listed) < 9 and
-        (len(recent_artists) > 0 or len(recent_venues) > 0)
+    while len(recently_listed) < 9 and (
+        len(recent_artists) > 0 or len(recent_venues) > 0
     ):
         if (
-            len(recent_artists) == 0 or
-            recent_venues[0].created_at > recent_artists[0].created_at
+            len(recent_artists) == 0
+            or recent_venues[0].created_at > recent_artists[0].created_at
         ):
             recent_venues[0].type = "Venue"
             recently_listed.append(recent_venues.pop(0))
@@ -886,16 +884,15 @@ def create_show_submission():
 
         for unavailability in unavailabilities:
             if (
-                start_time > str(unavailability.start_time) and
-                start_time < str(unavailability.end_time)
+                str(unavailability.start_time)
+                > start_time
+                < str(unavailability.end_time)
             ):
                 flash("Artist is unavailable at selected time")
                 return redirect(url_for("create_show_form"))
 
         show = Show(
-            venue_id=venue_id,
-            artist_id=artist_id,
-            start_time=start_time
+            venue_id=venue_id, artist_id=artist_id, start_time=start_time
         )
         db.session.add(show)
         db.session.commit()
