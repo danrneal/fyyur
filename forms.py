@@ -111,7 +111,7 @@ states = [
 ]
 
 
-class AnyOfMultiple(object):
+class AnyOfMultiple:
     """Compares all the incoming data to a sequence of valid inputs.
 
     Attributes:
