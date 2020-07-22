@@ -10,23 +10,42 @@ Usage: flask run
 # Imports
 # ----------------------------------------------------------------------------#
 
-from datetime import datetime
 import logging
-from logging import Formatter, FileHandler
 import os
 import sys
+from datetime import datetime
+from logging import FileHandler, Formatter
+
 import babel
 import dateutil.parser
 from flask import (
-    render_template, request, flash, redirect, url_for, abort, jsonify
-)
-from forms import (
-    VenueForm, ArtistForm, ShowForm, UnavailabilityForm, MusicForm
-)
-from models import (
-    app, db, Venue, Artist, Show, Genre, Area, Music, Unavailability
+    abort,
+    flash,
+    jsonify,
+    redirect,
+    render_template,
+    request,
+    url_for,
 )
 
+from forms import (
+    ArtistForm,
+    MusicForm,
+    ShowForm,
+    UnavailabilityForm,
+    VenueForm,
+)
+from models import (
+    Area,
+    Artist,
+    Genre,
+    Music,
+    Show,
+    Unavailability,
+    Venue,
+    app,
+    db,
+)
 
 # ----------------------------------------------------------------------------#
 # Filters

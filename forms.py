@@ -13,16 +13,26 @@ Classes:
 """
 
 from datetime import datetime
+
 from flask_wtf import Form
 from wtforms import (
-    StringField, SelectField, SelectMultipleField, DateTimeField, BooleanField,
-    TextAreaField, IntegerField
+    BooleanField,
+    DateTimeField,
+    IntegerField,
+    SelectField,
+    SelectMultipleField,
+    StringField,
+    TextAreaField,
 )
 from wtforms.compat import text_type
 from wtforms.validators import (
-    DataRequired, URL, Regexp, Optional, AnyOf, ValidationError
+    URL,
+    AnyOf,
+    DataRequired,
+    Optional,
+    Regexp,
+    ValidationError,
 )
-
 
 genres = [
     "Alternative",
