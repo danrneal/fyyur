@@ -32,7 +32,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 moment = Moment(app)
-app.config.from_object('config')
+app.config.from_object("config")
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
@@ -41,35 +41,23 @@ migrate = Migrate(app, db)
 # ----------------------------------------------------------------------------#
 
 venue_genres = db.Table(
-    'venue_genres',
+    "venue_genres",
     db.Column(
-        'venue_id',
-        db.Integer,
-        db.ForeignKey('venues.id'),
-        primary_key=True
+        "venue_id", db.Integer, db.ForeignKey("venues.id"), primary_key=True
     ),
     db.Column(
-        'genre_id',
-        db.Integer,
-        db.ForeignKey('genres.id'),
-        primary_key=True
-    )
+        "genre_id", db.Integer, db.ForeignKey("genres.id"), primary_key=True
+    ),
 )
 
 artist_genres = db.Table(
-    'artist_genres',
+    "artist_genres",
     db.Column(
-        'artist_id',
-        db.Integer,
-        db.ForeignKey('artists.id'),
-        primary_key=True
+        "artist_id", db.Integer, db.ForeignKey("artists.id"), primary_key=True
     ),
     db.Column(
-        'genre_id',
-        db.Integer,
-        db.ForeignKey('genres.id'),
-        primary_key=True
-    )
+        "genre_id", db.Integer, db.ForeignKey("genres.id"), primary_key=True
+    ),
 )
 
 
@@ -95,14 +83,14 @@ class Venue(db.Model):
             with the venue
     """
 
-    __tablename__ = 'venues'
-    __table_args__ = (db.UniqueConstraint('name', 'address', 'area_id'),)
+    __tablename__ = "venues"
+    __table_args__ = (db.UniqueConstraint("name", "address", "area_id"),)
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
-    genres = db.relationship('Genre', secondary=venue_genres, backref='venue')
+    genres = db.relationship("Genre", secondary=venue_genres, backref="venue")
     address = db.Column(db.String(120), nullable=False)
-    area_id = db.Column(db.Integer, db.ForeignKey('areas.id'), nullable=False)
+    area_id = db.Column(db.Integer, db.ForeignKey("areas.id"), nullable=False)
     phone = db.Column(db.String(120))
     website = db.Column(db.String(120))
     facebook_link = db.Column(db.String(120))
@@ -115,9 +103,7 @@ class Venue(db.Model):
         default=db.func.now()  # pylint: disable=no-member
     )
     shows = db.relationship(
-        'Show',
-        backref='venue',
-        cascade='all, delete-orphan'
+        "Show", backref="venue", cascade="all, delete-orphan"
     )
 
     def __repr__(self):
@@ -146,17 +132,15 @@ class Artist(db.Model):
             the artist is unable to be booked
     """
 
-    __tablename__ = 'artists'
-    __table_args__ = (db.UniqueConstraint('name', 'area_id'),)
+    __tablename__ = "artists"
+    __table_args__ = (db.UniqueConstraint("name", "area_id"),)
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
     genres = db.relationship(
-        'Genre',
-        secondary=artist_genres,
-        backref='artist'
+        "Genre", secondary=artist_genres, backref="artist"
     )
-    area_id = db.Column(db.Integer, db.ForeignKey('areas.id'), nullable=False)
+    area_id = db.Column(db.Integer, db.ForeignKey("areas.id"), nullable=False)
     phone = db.Column(db.String(120))
     website = db.Column(db.String(120))
     facebook_link = db.Column(db.String(120))
@@ -169,19 +153,13 @@ class Artist(db.Model):
         default=db.func.now()  # pylint: disable=no-member
     )
     shows = db.relationship(
-        'Show',
-        backref='artist',
-        cascade='all, delete-orphan'
+        "Show", backref="artist", cascade="all, delete-orphan"
     )
     unavailabilities = db.relationship(
-        'Unavailability',
-        backref='artist',
-        cascade='all, delete-orphan'
+        "Unavailability", backref="artist", cascade="all, delete-orphan"
     )
     music = db.relationship(
-        'Music',
-        backref='artist',
-        cascade='all, delete-orphan'
+        "Music", backref="artist", cascade="all, delete-orphan"
     )
 
     def __repr__(self):
@@ -198,21 +176,17 @@ class Show(db.Model):
         start_time: A datetime that represents the start time of the show
     """
 
-    __tablename__ = 'shows'
+    __tablename__ = "shows"
     __table_args__ = (
-        db.UniqueConstraint('venue_id', 'artist_id', 'start_time'),
+        db.UniqueConstraint("venue_id", "artist_id", "start_time"),
     )
 
     id = db.Column(db.Integer, primary_key=True)
     venue_id = db.Column(
-        db.Integer,
-        db.ForeignKey('venues.id'),
-        nullable=False
+        db.Integer, db.ForeignKey("venues.id"), nullable=False
     )
     artist_id = db.Column(
-        db.Integer,
-        db.ForeignKey('artists.id'),
-        nullable=False
+        db.Integer, db.ForeignKey("artists.id"), nullable=False
     )
     start_time = db.Column(
         db.DateTime,
@@ -229,7 +203,7 @@ class Genre(db.Model):
         name: A str representing the name of the genre
     """
 
-    __tablename__ = 'genres'
+    __tablename__ = "genres"
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120), nullable=False, unique=True)
@@ -249,17 +223,18 @@ class Area(db.Model):
         artists: A list of artists that are based out of city, state
     """
 
-    __tablename__ = 'areas'
-    __table_args__ = (db.UniqueConstraint('city', 'state'),)
+    __tablename__ = "areas"
+    __table_args__ = (db.UniqueConstraint("city", "state"),)
 
     id = db.Column(db.Integer, primary_key=True)
     city = db.Column(db.String(120), nullable=False)
     state = db.Column(db.String(120), nullable=False)
-    venues = db.relationship('Venue', backref='area')
-    artists = db.relationship('Artist', backref='area')
+    venues = db.relationship("Venue", backref="area")
+    artists = db.relationship("Artist", backref="area")
 
     def __repr__(self):
-        return f'{self.city}, {self.state}'
+        """An Area object's str representation."""
+        return f"{self.city}, {self.state}"
 
 
 class Music(db.Model):
@@ -271,13 +246,12 @@ class Music(db.Model):
         type_: A str representing the release type of the music
         title: A str representing the title of the music
     """
-    __table_args__ = (db.UniqueConstraint('artist_id', 'type_', 'title'),)
+
+    __table_args__ = (db.UniqueConstraint("artist_id", "type_", "title"),)
 
     id = db.Column(db.Integer, primary_key=True)
     artist_id = db.Column(
-        db.Integer,
-        db.ForeignKey('artists.id'),
-        nullable=False
+        db.Integer, db.ForeignKey("artists.id"), nullable=False
     )
     type_ = db.Column(db.String(120), nullable=False)
     title = db.Column(db.String(120), nullable=False)
@@ -293,17 +267,15 @@ class Unavailability(db.Model):
         end_time: A datetime representing the end of the interval
     """
 
-    __tablename__ = 'unavailability'
+    __tablename__ = "unavailability"
     __table_args__ = (
-        db.UniqueConstraint('artist_id', 'start_time', 'end_time'),
-        db.CheckConstraint('start_time < end_time')
+        db.UniqueConstraint("artist_id", "start_time", "end_time"),
+        db.CheckConstraint("start_time < end_time"),
     )
 
     id = db.Column(db.Integer, primary_key=True)
     artist_id = db.Column(
-        db.Integer,
-        db.ForeignKey('artists.id'),
-        nullable=False
+        db.Integer, db.ForeignKey("artists.id"), nullable=False
     )
     start_time = db.Column(
         db.DateTime,

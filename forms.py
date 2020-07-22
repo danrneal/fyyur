@@ -25,17 +25,79 @@ from wtforms.validators import (
 
 
 genres = [
-    'Alternative', 'Blues', 'Classical', 'Country', 'Electronic', 'Folk',
-    'Funk', 'Hip-Hop', 'Heavy Metal', 'Instrumental', 'Jazz',
-    'Musical Theatre', 'Pop', 'Punk', 'R&B', 'Reggae', 'Rock n Roll', 'Soul',
-    'Swing', 'Other'
+    "Alternative",
+    "Blues",
+    "Classical",
+    "Country",
+    "Electronic",
+    "Folk",
+    "Funk",
+    "Hip-Hop",
+    "Heavy Metal",
+    "Instrumental",
+    "Jazz",
+    "Musical Theatre",
+    "Pop",
+    "Punk",
+    "R&B",
+    "Reggae",
+    "Rock n Roll",
+    "Soul",
+    "Swing",
+    "Other",
 ]
 states = [
-    'AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'DC', 'FL', 'GA', 'HI',
-    'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'ME', 'MT', 'NE', 'NV', 'NH',
-    'NJ', 'NM', 'NY', 'NC', 'ND', 'OH', 'OK', 'OR', 'MD', 'MA', 'MI', 'MN',
-    'MS', 'MO', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VT', 'VA', 'WA',
-    'WV', 'WI', 'WY'
+    "AL",
+    "AK",
+    "AZ",
+    "AR",
+    "CA",
+    "CO",
+    "CT",
+    "DE",
+    "DC",
+    "FL",
+    "GA",
+    "HI",
+    "ID",
+    "IL",
+    "IN",
+    "IA",
+    "KS",
+    "KY",
+    "LA",
+    "ME",
+    "MT",
+    "NE",
+    "NV",
+    "NH",
+    "NJ",
+    "NM",
+    "NY",
+    "NC",
+    "ND",
+    "OH",
+    "OK",
+    "OR",
+    "MD",
+    "MA",
+    "MI",
+    "MN",
+    "MS",
+    "MO",
+    "PA",
+    "RI",
+    "SC",
+    "SD",
+    "TN",
+    "TX",
+    "UT",
+    "VT",
+    "VA",
+    "WA",
+    "WV",
+    "WI",
+    "WY",
 ]
 
 
@@ -103,13 +165,12 @@ class VenueForm(Form):
     """
 
     name = StringField(
-        'name',
-        validators=[DataRequired(message='Please enter a name')]
+        "name", validators=[DataRequired(message="Please enter a name")]
     )
     genres = SelectMultipleField(
-        'genres',
+        "genres",
         validators=[
-            DataRequired(message='Please select at least one genre'),
+            DataRequired(message="Please select at least one genre"),
             AnyOfMultiple(
                 genres,
                 message="Please only select genres from the list of choices"
@@ -118,60 +179,57 @@ class VenueForm(Form):
         choices=[(genre, genre) for genre in genres]
     )
     address = StringField(
-        'address',
-        validators=[DataRequired(message='Please enter an address')]
+        "address", validators=[DataRequired(message="Please enter an address")]
     )
     city = StringField(
-        'city',
-        validators=[DataRequired(message='Please enter a city')]
+        "city", validators=[DataRequired(message="Please enter a city")]
     )
     state = SelectField(
-        'state',
+        "state",
         validators=[
-            DataRequired(message='Please select a state'),
-            AnyOf(states, message='Please select a valid state')
+            DataRequired(message="Please select a state"),
+            AnyOf(states, message="Please select a valid state"),
         ],
         choices=[(state, state) for state in states]
     )
     phone = StringField(
-        'phone',
+        "phone",
         validators=[
             Optional(),
             Regexp(
-                r'^\d{3}-\d{3}-\d{4}$',
-                message='Please enter phone number in the format xxx-xxx-xxxx'
-            )
-        ]
+                r"^\d{3}-\d{3}-\d{4}$",
+                message="Please enter phone number in the format xxx-xxx-xxxx",
+            ),
+        ],
     )
     website = StringField(
-        'website',
+        "website",
         validators=[
             Optional(),
-            URL(message='Please enter a valid url for the website')
-        ]
+            URL(message="Please enter a valid url for the website"),
+        ],
     )
     facebook_link = StringField(
-        'facebook_link',
+        "facebook_link",
         validators=[
             Optional(),
-            URL(message='Please enter a valid url for the facebook link')
-        ]
+            URL(message="Please enter a valid url for the facebook link"),
+        ],
     )
     seeking_talent = BooleanField(
-        'seeking_talent',
+        "seeking_talent",
         validators=[Optional()],
-        false_values=('', None, False)
+        false_values=("", None, False),
     )
     seeking_description = TextAreaField(
-        'seeking_description',
-        validators=[Optional()]
+        "seeking_description", validators=[Optional()]
     )
     image_link = StringField(
-        'image_link',
+        "image_link",
         validators=[
             Optional(),
-            URL(message='Please enter a valid url for the image linke')
-        ]
+            URL(message="Please enter a valid url for the image link"),
+        ],
     )
 
 
@@ -194,13 +252,12 @@ class ArtistForm(Form):
     """
 
     name = StringField(
-        'name',
-        validators=[DataRequired(message='Please enter a name')]
+        "name", validators=[DataRequired(message="Please enter a name")]
     )
     genres = SelectMultipleField(
-        'genres',
+        "genres",
         validators=[
-            DataRequired(message='Please select at least one genre'),
+            DataRequired(message="Please select at least one genre"),
             AnyOfMultiple(
                 genres,
                 message="Please only select genres from the list of choices"
@@ -209,56 +266,54 @@ class ArtistForm(Form):
         choices=[(genre, genre) for genre in genres]
     )
     city = StringField(
-        'city',
-        validators=[DataRequired(message='Please enter a city')]
+        "city", validators=[DataRequired(message="Please enter a city")]
     )
     state = SelectField(
-        'state',
+        "state",
         validators=[
-            DataRequired(message='Please select a state'),
-            AnyOf(states, message='Please select a valid state')
+            DataRequired(message="Please select a state"),
+            AnyOf(states, message="Please select a valid state"),
         ],
         choices=[(state, state) for state in states]
     )
     phone = StringField(
-        'phone',
+        "phone",
         validators=[
             Optional(),
             Regexp(
-                r'^\d{3}-\d{3}-\d{4}$',
-                message='Please enter phone number in the format xxx-xxx-xxxx'
-            )
-        ]
+                r"^\d{3}-\d{3}-\d{4}$",
+                message="Please enter phone number in the format xxx-xxx-xxxx",
+            ),
+        ],
     )
     website = StringField(
-        'website',
+        "website",
         validators=[
             Optional(),
-            URL(message='Please enter a valid url for the website')
-        ]
+            URL(message="Please enter a valid url for the website"),
+        ],
     )
     facebook_link = StringField(
-        'facebook_link',
+        "facebook_link",
         validators=[
             Optional(),
-            URL(message='Please enter a valid url for the facebook link')
-        ]
+            URL(message="Please enter a valid url for the facebook link"),
+        ],
     )
     seeking_venue = BooleanField(
-        'seeking_venue',
+        "seeking_venue",
         validators=[Optional()],
-        false_values=('', None, False)
+        false_values=("", None, False),
     )
     seeking_description = TextAreaField(
-        'seeking_description',
-        validators=[Optional()]
+        "seeking_description", validators=[Optional()]
     )
     image_link = StringField(
-        'image_link',
+        "image_link",
         validators=[
             Optional(),
-            URL(message='Please enter a valid url for the image linke')
-        ]
+            URL(message="Please enter a valid url for the image link"),
+        ],
     )
 
 
@@ -273,17 +328,17 @@ class ShowForm(Form):
     """
 
     venue_id = IntegerField(
-        'venue_id',
-        validators=[DataRequired(message='Please enter a venue id')]
+        "venue_id",
+        validators=[DataRequired(message="Please enter a venue id")],
     )
     artist_id = IntegerField(
-        'artist_id',
-        validators=[DataRequired(message='Please enter an artist id')]
+        "artist_id",
+        validators=[DataRequired(message="Please enter an artist id")],
     )
     start_time = DateTimeField(
-        'start_time',
-        validators=[DataRequired(message='Please enter a start time')],
-        default=datetime.today()
+        "start_time",
+        validators=[DataRequired(message="Please enter a start time")],
+        default=datetime.today(),
     )
 
 
@@ -298,13 +353,13 @@ class UnavailabilityForm(Form):
     """
 
     start_time = DateTimeField(
-        'start_time',
-        validators=[DataRequired(message='Please enter a start time')],
-        default=datetime.today()
+        "start_time",
+        validators=[DataRequired(message="Please enter a start time")],
+        default=datetime.today(),
     )
     end_time = DateTimeField(
-        'end_time',
-        validators=[DataRequired(message='Please enter an end time')]
+        "end_time",
+        validators=[DataRequired(message="Please enter an end time")],
     )
 
 
@@ -317,17 +372,15 @@ class MusicForm(Form):
     """
 
     type_ = SelectField(
-        'type_',
+        "type_",
         validators=[
-            DataRequired(message='Please select a release type'),
+            DataRequired(message="Please select a release type"),
             AnyOf(
-                ['Album', 'Song'],
-                message='Please select a valid release type'
-            )
+                ["Album", "Song"], message="Please select a valid release type"
+            ),
         ],
-        choices=[('Album', 'Album'), ('Song', 'Song')]
+        choices=[("Album", "Album"), ("Song", "Song")],
     )
     title = StringField(
-        'title',
-        validators=[DataRequired(message='Please enter a title')]
+        "title", validators=[DataRequired(message="Please enter a title")]
     )

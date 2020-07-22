@@ -14,17 +14,16 @@ Attributes:
         parameter by the same name
 """
 
+import os
 
 SECRET_KEY = os.urandom(32)
 basedir = os.path.abspath(os.path.dirname(__file__))
 DEBUG = True
 
-DIALECT = 'postgresql'
-USER = 'dneal'
-PASS = ''
-HOST = 'localhost'
+DIALECT = "postgresql"
+HOST = "localhost"
 PORT = 5432
-DATABASE = 'fyyur'
+DATABASE = "fyyur"
 
-SQLALCHEMY_DATABASE_URI = f'{DIALECT}://{USER}:{PASS}@{HOST}:{PORT}/{DATABASE}'
+SQLALCHEMY_DATABASE_URI = f"{DIALECT}://{HOST}:{PORT}/{DATABASE}"
 SQLALCHEMY_TRACK_MODIFICATIONS = False

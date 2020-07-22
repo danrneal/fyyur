@@ -32,8 +32,9 @@ from models import (
 # Filters
 # ----------------------------------------------------------------------------#
 
-def format_datetime(value, datetime_format='medium'):
-    """Converts a datetime str to a format that is understood by the db
+
+def format_datetime(value, datetime_format="medium"):
+    """Converts a datetime str to a format that is understood by the db.
 
     Args:
         value: A str representing a datetime
@@ -46,15 +47,15 @@ def format_datetime(value, datetime_format='medium'):
 
     date = dateutil.parser.parse(value)
 
-    if datetime_format == 'full':
+    if datetime_format == "full":
         datetime_format = "EEEE MMMM, d, y 'at' h:mma"
-    elif datetime_format == 'medium':
+    elif datetime_format == "medium":
         datetime_format = "EE MM, dd, y h:mma"
 
     return babel.dates.format_datetime(date, datetime_format)
 
 
-app.jinja_env.filters['datetime'] = format_datetime  # pylint: disable=E1101
+app.jinja_env.filters["datetime"] = format_datetime  # pylint: disable=E1101
 
 
 # ----------------------------------------------------------------------------#
@@ -110,7 +111,8 @@ def get_area_id(city, state):
 # Controllers
 # ----------------------------------------------------------------------------#
 
-@app.route('/')
+
+@app.route("/")
 def index():
     """The route handler for the homepage
 
@@ -134,20 +136,21 @@ def index():
             len(recent_artists) == 0 or
             recent_venues[0].created_at > recent_artists[0].created_at
         ):
-            recent_venues[0].type = 'Venue'
+            recent_venues[0].type = "Venue"
             recently_listed.append(recent_venues.pop(0))
         else:
-            recent_artists[0].type = 'Artist'
+            recent_artists[0].type = "Artist"
             recently_listed.append(recent_artists.pop(0))
 
     print(recently_listed)
-    return render_template('pages/home.html', recently_listed=recently_listed)
+    return render_template("pages/home.html", recently_listed=recently_listed)
 
 
 #  Venues
 #  ----------------------------------------------------------------
 
-@app.route('/venues')
+
+@app.route("/venues")
 def venues():
     """Route handler for looking at all venues grouped by city, state
 
@@ -157,39 +160,34 @@ def venues():
     areas = Area.query.filter(
         Area.venues != None  # noqa, pylint: disable=singleton-comparison
     ).all()
-    return render_template('pages/venues.html', areas=areas)
+    return render_template("pages/venues.html", areas=areas)
 
 
-@app.route('/venues/search', methods=['POST'])
+@app.route("/venues/search", methods=["POST"])
 def search_venues():
     """Route handler for venue search
 
     Returns:
         A template with the search results
     """
-    search_term = request.form.get('search_term', '')
+    search_term = request.form.get("search_term", "")
     areas = Area.query.filter(
-        Area.city.ilike(f'%{search_term}%') |  # pylint: disable=no-member
-        Area.state.ilike(f'%{search_term}%')  # pylint: disable=no-member
+        Area.city.ilike(f"%{search_term}%")  # pylint: disable=no-member
+        | Area.state.ilike(f"%{search_term}%")  # pylint: disable=no-member
     ).all()
     area_ids = [area.id for area in areas]
     data = Venue.query.filter(
-        Venue.name.ilike(f'%{search_term}%') |  # pylint: disable=no-member
-        Venue.area_id.in_(area_ids)  # pylint: disable=no-member
+        Venue.name.ilike(f"%{search_term}%")  # pylint: disable=no-member
+        | Venue.area_id.in_(area_ids)  # pylint: disable=no-member
     ).all()
-    results = {
-        'count': len(data),
-        'data': data
-    }
+    results = {"count": len(data), "data": data}
 
     return render_template(
-        'pages/search_venues.html',
-        results=results,
-        search_term=search_term
+        "pages/search_venues.html", results=results, search_term=search_term
     )
 
 
-@app.route('/venues/<int:venue_id>')
+@app.route("/venues/<int:venue_id>")
 def show_venue(venue_id):
     """Route handler for showing the details for a venue
 
@@ -219,13 +217,14 @@ def show_venue(venue_id):
     venue.past_shows_count = len(venue.past_shows)
     venue.upcoming_shows_count = len(venue.upcoming_shows)
 
-    return render_template('pages/show_venue.html', venue=venue)
+    return render_template("pages/show_venue.html", venue=venue)
 
 
 #  Update Venue
 #  ----------------------------------------------------------------
 
-@app.route('/venues/<int:venue_id>/edit', methods=['GET'])
+
+@app.route("/venues/<int:venue_id>/edit", methods=["GET"])
 def edit_venue_form(venue_id):
     """Displays the form for editing a venue
 
@@ -240,10 +239,10 @@ def edit_venue_form(venue_id):
     venue.state = venue.area.state
     form = VenueForm(obj=venue)
 
-    return render_template('forms/edit_venue.html', form=form, venue=venue)
+    return render_template("forms/edit_venue.html", form=form, venue=venue)
 
 
-@app.route('/venues/<int:venue_id>/edit', methods=['POST'])
+@app.route("/venues/<int:venue_id>/edit", methods=["POST"])
 def edit_venue_submission(venue_id):
     """Updates an existing venue in the db from a form submission
 
@@ -256,26 +255,26 @@ def edit_venue_submission(venue_id):
 
     form = VenueForm()
     if not form.validate():
-        flash(list(form.errors.values())[0][0], 'error')
-        return redirect(url_for('edit_venue_form', venue_id=venue_id))
+        flash(list(form.errors.values())[0][0], "error")
+        return redirect(url_for("edit_venue_form", venue_id=venue_id))
 
     error = False
 
     try:
-        venue_name = request.form.get('name')
-        city = request.form.get('city')
-        state = request.form.get('state')
+        venue_name = request.form.get("name")
+        city = request.form.get("city")
+        state = request.form.get("state")
         venue = Venue.query.get(venue_id)
         venue.name = venue_name
-        venue.genres = get_genres(request.form.getlist('genres'))
-        venue.address = request.form.get('address')
+        venue.genres = get_genres(request.form.getlist("genres"))
+        venue.address = request.form.get("address")
         venue.area_id = get_area_id(city, state)
-        venue.phone = request.form.get('phone')
-        venue.website = request.form.get('website')
-        venue.facebook_link = request.form.get('facebook_link')
-        venue.seeking_talent = bool(request.form.get('seeking_talent'))
-        venue.seeking_description = request.form.get('seeking_description')
-        venue.image_link = request.form.get('image_link')
+        venue.phone = request.form.get("phone")
+        venue.website = request.form.get("website")
+        venue.facebook_link = request.form.get("facebook_link")
+        venue.seeking_talent = bool(request.form.get("seeking_talent"))
+        venue.seeking_description = request.form.get("seeking_description")
+        venue.image_link = request.form.get("image_link")
         db.session.commit()
     except Exception:  # pylint: disable=broad-except
         error = True
@@ -285,18 +284,19 @@ def edit_venue_submission(venue_id):
         db.session.close()
 
     if error:
-        flash(f'Venue {venue_name} was unable to be updated!', 'error')
+        flash(f"Venue {venue_name} was unable to be updated!", "error")
         abort(500)
 
-    flash(f'Venue {venue_name} was successfully updated!')
+    flash(f"Venue {venue_name} was successfully updated!")
 
-    return redirect(url_for('show_venue', venue_id=venue_id))
+    return redirect(url_for("show_venue", venue_id=venue_id))
 
 
 #  Create Venue
 #  ----------------------------------------------------------------
 
-@app.route('/venues/create', methods=['GET'])
+
+@app.route("/venues/create", methods=["GET"])
 def create_venue_form():
     """Displays the form for creating a venue
 
@@ -304,10 +304,10 @@ def create_venue_form():
         A html template for the venue form
     """
     form = VenueForm()
-    return render_template('forms/new_venue.html', form=form)
+    return render_template("forms/new_venue.html", form=form)
 
 
-@app.route('/venues/create', methods=['POST'])
+@app.route("/venues/create", methods=["POST"])
 def create_venue_submission():
     """Creates a new venue in the db from a form submission
 
@@ -317,26 +317,26 @@ def create_venue_submission():
 
     form = VenueForm()
     if not form.validate():
-        flash(list(form.errors.values())[0][0], 'error')
-        return redirect(url_for('create_venue_form'))
+        flash(list(form.errors.values())[0][0], "error")
+        return redirect(url_for("create_venue_form"))
 
     error = False
 
     try:
-        venue_name = request.form.get('name')
-        city = request.form.get('city')
-        state = request.form.get('state')
+        venue_name = request.form.get("name")
+        city = request.form.get("city")
+        state = request.form.get("state")
         venue = Venue(
             name=venue_name,
-            genres=get_genres(request.form.getlist('genres')),
-            address=request.form.get('address'),
+            genres=get_genres(request.form.getlist("genres")),
+            address=request.form.get("address"),
             area_id=get_area_id(city, state),
-            phone=request.form.get('phone'),
-            website=request.form.get('website'),
-            facebook_link=request.form.get('facebook_link'),
-            seeking_talent=bool(request.form.get('seeking_talent')),
-            seeking_description=request.form.get('seeking_description'),
-            image_link=request.form.get('image_link')
+            phone=request.form.get("phone"),
+            website=request.form.get("website"),
+            facebook_link=request.form.get("facebook_link"),
+            seeking_talent=bool(request.form.get("seeking_talent")),
+            seeking_description=request.form.get("seeking_description"),
+            image_link=request.form.get("image_link"),
         )
         db.session.add(venue)
         db.session.commit()
@@ -351,18 +351,19 @@ def create_venue_submission():
         db.session.close()
 
     if error:
-        flash(f'Venue {venue_name} was unable to be listed!', 'error')
+        flash(f"Venue {venue_name} was unable to be listed!", "error")
         abort(500)
 
-    flash(f'Venue {venue_name} was successfully listed!')
+    flash(f"Venue {venue_name} was successfully listed!")
 
-    return redirect(url_for('show_venue', venue_id=venue_id))
+    return redirect(url_for("show_venue", venue_id=venue_id))
 
 
 #  Delete Venue
 #  ----------------------------------------------------------------
 
-@app.route('/venues/<venue_id>', methods=['DELETE'])
+
+@app.route("/venues/<venue_id>", methods=["DELETE"])
 def delete_venue(venue_id):
     """Route handler to delete a venue from the db
 
@@ -380,7 +381,7 @@ def delete_venue(venue_id):
         venue_name = venue.name
         db.session.delete(venue)
         db.session.commit()
-        response = {'success': True}
+        response = {"success": True}
     except Exception:  # pylint: disable=broad-except
         error = True
         db.session.rollback()
@@ -389,10 +390,10 @@ def delete_venue(venue_id):
         db.session.close()
 
     if error:
-        flash(f'Venue {venue_name} was unable to be deleted!', 'error')
+        flash(f"Venue {venue_name} was unable to be deleted!", "error")
         abort(500)
 
-    flash(f'Venue {venue_name} was successfully deleted!')
+    flash(f"Venue {venue_name} was successfully deleted!")
 
     return jsonify(response)
 
@@ -400,7 +401,8 @@ def delete_venue(venue_id):
 #  Artists
 #  ----------------------------------------------------------------
 
-@app.route('/artists')
+
+@app.route("/artists")
 def artists():
     """Route handler for showing a list of artists
 
@@ -408,39 +410,34 @@ def artists():
         A template for a list of all artists
     """
     artists_all = Artist.query.all()
-    return render_template('pages/artists.html', artists=artists_all)
+    return render_template("pages/artists.html", artists=artists_all)
 
 
-@app.route('/artists/search', methods=['POST'])
+@app.route("/artists/search", methods=["POST"])
 def search_artists():
     """Route handler for artist search
 
     Returns:
         A template with the search results
     """
-    search_term = request.form.get('search_term', '')
+    search_term = request.form.get("search_term", "")
     areas = Area.query.filter(
-        Area.city.ilike(f'%{search_term}%') |  # pylint: disable=no-member
-        Area.state.ilike(f'%{search_term}%')  # pylint: disable=no-member
+        Area.city.ilike(f"%{search_term}%")  # pylint: disable=no-member
+        | Area.state.ilike(f"%{search_term}%")  # pylint: disable=no-member
     ).all()
     area_ids = [area.id for area in areas]
     data = Artist.query.filter(
-        Artist.name.ilike(f'%{search_term}%') |  # pylint: disable=no-member
-        Artist.area_id.in_(area_ids)  # pylint: disable=no-member
+        Artist.name.ilike(f"%{search_term}%")  # pylint: disable=no-member
+        | Artist.area_id.in_(area_ids)  # pylint: disable=no-member
     ).all()
-    results = {
-        'count': len(data),
-        'data': data
-    }
+    results = {"count": len(data), "data": data}
 
     return render_template(
-        'pages/search_artists.html',
-        results=results,
-        search_term=search_term
+        "pages/search_artists.html", results=results, search_term=search_term
     )
 
 
-@app.route('/artists/<int:artist_id>')
+@app.route("/artists/<int:artist_id>")
 def show_artist(artist_id):
     """Route handler for showing the details for an artist
 
@@ -473,7 +470,7 @@ def show_artist(artist_id):
     unavailability_form = UnavailabilityForm()
 
     return render_template(
-        'pages/show_artist.html',
+        "pages/show_artist.html",
         artist=artist,
         music_form=music_form,
         unavailability_form=unavailability_form
@@ -482,7 +479,8 @@ def show_artist(artist_id):
 
 #  Create Music
 
-@app.route('/artists/<int:artist_id>/music/create', methods=['POST'])
+
+@app.route("/artists/<int:artist_id>/music/create", methods=["POST"])
 def create_music(artist_id):
     """Creates a new featured song or album for the artist from form submission
 
@@ -492,19 +490,15 @@ def create_music(artist_id):
 
     form = MusicForm()
     if not form.validate():
-        flash(list(form.errors.values())[0][0], 'error')
-        return redirect(url_for('show_artist', artist_id=artist_id))
+        flash(list(form.errors.values())[0][0], "error")
+        return redirect(url_for("show_artist", artist_id=artist_id))
 
     error = False
 
     try:
-        music_type = request.form.get('type_')
-        music_title = request.form.get('title')
-        music = Music(
-            artist_id=artist_id,
-            type_=music_type,
-            title=music_title
-        )
+        music_type = request.form.get("type_")
+        music_title = request.form.get("title")
+        music = Music(artist_id=artist_id, type_=music_type, title=music_title)
         db.session.add(music)
         db.session.commit()
     except Exception:  # pylint: disable=broad-except
@@ -515,17 +509,18 @@ def create_music(artist_id):
         db.session.close()
 
     if error:
-        flash(f'{music_type} {music_title} could not be added!', 'error')
+        flash(f"{music_type} {music_title} could not be added!", "error")
         abort(500)
 
-    flash(f'{music_type} {music_title} was successfully added!')
+    flash(f"{music_type} {music_title} was successfully added!")
 
-    return redirect(url_for('show_artist', artist_id=artist_id))
+    return redirect(url_for("show_artist", artist_id=artist_id))
 
 
 #  Delete Music
 
-@app.route('/artists/<int:artist_id>/music/<int:music_id>', methods=['DELETE'])
+
+@app.route("/artists/<int:artist_id>/music/<int:music_id>", methods=["DELETE"])
 def delete_music(artist_id, music_id):  # pylint: disable=unused-argument
     """Route handler to delete an piece of music for an artist from the db
 
@@ -546,7 +541,7 @@ def delete_music(artist_id, music_id):  # pylint: disable=unused-argument
         music_title = music.title
         db.session.delete(music)
         db.session.commit()
-        response = {'success': True}
+        response = {"success": True}
     except Exception:  # pylint: disable=broad-except
         error = True
         db.session.rollback()
@@ -555,17 +550,18 @@ def delete_music(artist_id, music_id):  # pylint: disable=unused-argument
         db.session.close()
 
     if error:
-        flash(f'{music_type} {music_title} was unable to be deleted!', 'error')
+        flash(f"{music_type} {music_title} was unable to be deleted!", "error")
         abort(500)
 
-    flash(f'{music_type} {music_title} was successfully deleted!')
+    flash(f"{music_type} {music_title} was successfully deleted!")
 
     return jsonify(response)
 
 
 #  Create Unavailability
 
-@app.route('/artists/<int:artist_id>/unavailability/create', methods=['POST'])
+
+@app.route("/artists/<int:artist_id>/unavailability/create", methods=["POST"])
 def create_unavailability(artist_id):
     """Creates a new unavailability for the artist from a form submission
 
@@ -575,16 +571,16 @@ def create_unavailability(artist_id):
 
     form = UnavailabilityForm()
     if not form.validate():
-        flash(list(form.errors.values())[0][0], 'error')
-        return redirect(url_for('show_artist', artist_id=artist_id))
+        flash(list(form.errors.values())[0][0], "error")
+        return redirect(url_for("show_artist", artist_id=artist_id))
 
     error = False
 
     try:
         unavailability = Unavailability(
             artist_id=artist_id,
-            start_time=request.form.get('start_time'),
-            end_time=request.form.get('end_time')
+            start_time=request.form.get("start_time"),
+            end_time=request.form.get("end_time"),
         )
         db.session.add(unavailability)
         db.session.commit()
@@ -596,19 +592,19 @@ def create_unavailability(artist_id):
         db.session.close()
 
     if error:
-        flash(f'Unavailability could not be added!', 'error')
+        flash(f"Unavailability could not be added!", "error")
         abort(500)
 
-    flash(f'Unavailability was successfully added!')
+    flash(f"Unavailability was successfully added!")
 
-    return redirect(url_for('show_artist', artist_id=artist_id))
+    return redirect(url_for("show_artist", artist_id=artist_id))
 
 
 # Delete Unavailability
 
 @app.route(
-    '/artists/<int:artist_id>/unavailability/<int:unavailability_id>',
-    methods=['DELETE']
+    "/artists/<int:artist_id>/unavailability/<int:unavailability_id>",
+    methods=["DELETE"],
 )
 def delete_unavailability(
     artist_id, unavailability_id  # pylint: disable=unused-argument
@@ -631,7 +627,7 @@ def delete_unavailability(
         unavailability = Unavailability.query.get(unavailability_id)
         db.session.delete(unavailability)
         db.session.commit()
-        response = {'success': True}
+        response = {"success": True}
     except Exception:  # pylint: disable=broad-except
         error = True
         db.session.rollback()
@@ -640,10 +636,10 @@ def delete_unavailability(
         db.session.close()
 
     if error:
-        flash(f'Unavailability was unable to be deleted!', 'error')
+        flash(f"Unavailability was unable to be deleted!", "error")
         abort(500)
 
-    flash(f'Unavailability was successfully deleted!')
+    flash(f"Unavailability was successfully deleted!")
 
     return jsonify(response)
 
@@ -651,7 +647,8 @@ def delete_unavailability(
 #  Update Artist
 #  ----------------------------------------------------------------
 
-@app.route('/artists/<int:artist_id>/edit', methods=['GET'])
+
+@app.route("/artists/<int:artist_id>/edit", methods=["GET"])
 def edit_artist_form(artist_id):
     """Displays the form for editing an artist
 
@@ -666,10 +663,10 @@ def edit_artist_form(artist_id):
     artist.state = artist.area.state
     form = ArtistForm(obj=artist)
 
-    return render_template('forms/edit_artist.html', form=form, artist=artist)
+    return render_template("forms/edit_artist.html", form=form, artist=artist)
 
 
-@app.route('/artists/<int:artist_id>/edit', methods=['POST'])
+@app.route("/artists/<int:artist_id>/edit", methods=["POST"])
 def edit_artist_submission(artist_id):
     """Updates an existing artist in the db from a form submission
 
@@ -682,25 +679,25 @@ def edit_artist_submission(artist_id):
 
     form = ArtistForm()
     if not form.validate():
-        flash(list(form.errors.values())[0][0], 'error')
-        return redirect(url_for('edit_artist_form', artist_id=artist_id))
+        flash(list(form.errors.values())[0][0], "error")
+        return redirect(url_for("edit_artist_form", artist_id=artist_id))
 
     error = False
 
     try:
-        artist_name = request.form.get('name')
-        city = request.form.get('city')
-        state = request.form.get('state')
+        artist_name = request.form.get("name")
+        city = request.form.get("city")
+        state = request.form.get("state")
         artist = Artist.query.get(artist_id)
         artist.name = artist_name
-        artist.genres = get_genres(request.form.getlist('genres'))
+        artist.genres = get_genres(request.form.getlist("genres"))
         artist.area_id = get_area_id(city, state)
-        artist.phone = request.form.get('phone')
-        artist.website = request.form.get('website')
-        artist.facebook_link = request.form.get('facebook_link')
-        artist.seeking_venue = bool(request.form.get('seeking_venue'))
-        artist.seeking_description = request.form.get('seeking_description')
-        artist.image_link = request.form.get('image_link')
+        artist.phone = request.form.get("phone")
+        artist.website = request.form.get("website")
+        artist.facebook_link = request.form.get("facebook_link")
+        artist.seeking_venue = bool(request.form.get("seeking_venue"))
+        artist.seeking_description = request.form.get("seeking_description")
+        artist.image_link = request.form.get("image_link")
         db.session.commit()
     except Exception:  # pylint: disable=broad-except
         error = True
@@ -710,18 +707,19 @@ def edit_artist_submission(artist_id):
         db.session.close()
 
     if error:
-        flash(f'Artist {artist_name} was unable to be updated!', 'error')
+        flash(f"Artist {artist_name} was unable to be updated!", "error")
         abort(500)
 
-    flash(f'Artist {artist_name} was successfully updated!')
+    flash(f"Artist {artist_name} was successfully updated!")
 
-    return redirect(url_for('show_artist', artist_id=artist_id))
+    return redirect(url_for("show_artist", artist_id=artist_id))
 
 
 #  Create Artist
 #  ----------------------------------------------------------------
 
-@app.route('/artists/create', methods=['GET'])
+
+@app.route("/artists/create", methods=["GET"])
 def create_artist_form():
     """Displays the form for creating an artist
 
@@ -729,10 +727,10 @@ def create_artist_form():
         A html template for the artist form
     """
     form = ArtistForm()
-    return render_template('forms/new_artist.html', form=form)
+    return render_template("forms/new_artist.html", form=form)
 
 
-@app.route('/artists/create', methods=['POST'])
+@app.route("/artists/create", methods=["POST"])
 def create_artist_submission():
     """Creates a new artist in the db from a form submission
 
@@ -742,25 +740,25 @@ def create_artist_submission():
 
     form = ArtistForm()
     if not form.validate():
-        flash(list(form.errors.values())[0][0], 'error')
-        return redirect(url_for('create_artist_form'))
+        flash(list(form.errors.values())[0][0], "error")
+        return redirect(url_for("create_artist_form"))
 
     error = False
 
     try:
-        artist_name = request.form.get('name')
-        city = request.form.get('city')
-        state = request.form.get('state')
+        artist_name = request.form.get("name")
+        city = request.form.get("city")
+        state = request.form.get("state")
         artist = Artist(
             name=artist_name,
-            genres=get_genres(request.form.getlist('genres')),
+            genres=get_genres(request.form.getlist("genres")),
             area_id=get_area_id(city, state),
-            phone=request.form.get('phone'),
-            website=request.form.get('website'),
-            facebook_link=request.form.get('facebook_link'),
-            seeking_venue=bool(request.form.get('seeking_venue')),
-            seeking_description=request.form.get('seeking_description'),
-            image_link=request.form.get('image_link')
+            phone=request.form.get("phone"),
+            website=request.form.get("website"),
+            facebook_link=request.form.get("facebook_link"),
+            seeking_venue=bool(request.form.get("seeking_venue")),
+            seeking_description=request.form.get("seeking_description"),
+            image_link=request.form.get("image_link"),
         )
         db.session.add(artist)
         db.session.commit()
@@ -773,18 +771,19 @@ def create_artist_submission():
         db.session.close()
 
     if error:
-        flash(f'Artist {artist_name} was unable to be listed!', 'error')
+        flash(f"Artist {artist_name} was unable to be listed!", "error")
         abort(500)
 
-    flash(f'Artist {artist_name} was successfully listed!')
+    flash(f"Artist {artist_name} was successfully listed!")
 
-    return redirect(url_for('show_artist', artist_id=artist_id))
+    return redirect(url_for("show_artist", artist_id=artist_id))
 
 
 #  Delete Artist
 #  ----------------------------------------------------------------
 
-@app.route('/artists/<artist_id>', methods=['DELETE'])
+
+@app.route("/artists/<artist_id>", methods=["DELETE"])
 def delete_artist(artist_id):
     """Route handler to delete a artist from the db
 
@@ -802,7 +801,7 @@ def delete_artist(artist_id):
         artist_name = artist.name
         db.session.delete(artist)
         db.session.commit()
-        response = {'success': True}
+        response = {"success": True}
     except Exception:  # pylint: disable=broad-except
         error = True
         db.session.rollback()
@@ -811,10 +810,10 @@ def delete_artist(artist_id):
         db.session.close()
 
     if error:
-        flash(f'Artist {artist_name} was unable to be deleted!', 'error')
+        flash(f"Artist {artist_name} was unable to be deleted!", "error")
         abort(500)
 
-    flash(f'Artist {artist_name} was successfully deleted!')
+    flash(f"Artist {artist_name} was successfully deleted!")
 
     return jsonify(response)
 
@@ -822,7 +821,8 @@ def delete_artist(artist_id):
 #  Shows
 #  ----------------------------------------------------------------
 
-@app.route('/shows')
+
+@app.route("/shows")
 def shows():
     """Route handler for showing a list of shows
 
@@ -838,13 +838,14 @@ def shows():
         show.artist_image_link = show.artist.image_link
         show.start_time = str(show.start_time)
 
-    return render_template('pages/shows.html', shows=shows_all)
+    return render_template("pages/shows.html", shows=shows_all)
 
 
 #  Create Show
 #  ----------------------------------------------------------------
 
-@app.route('/shows/create', methods=['GET'])
+
+@app.route("/shows/create", methods=["GET"])
 def create_show_form():
     """Displays the form for creating a show
 
@@ -852,10 +853,10 @@ def create_show_form():
         A html template for the show form
     """
     form = ShowForm()
-    return render_template('forms/new_show.html', form=form)
+    return render_template("forms/new_show.html", form=form)
 
 
-@app.route('/shows/create', methods=['POST'])
+@app.route("/shows/create", methods=["POST"])
 def create_show_submission():
     """Creates a new show in the db from a form submission
 
@@ -865,16 +866,16 @@ def create_show_submission():
 
     form = ShowForm()
     if not form.validate():
-        flash(list(form.errors.values())[0][0], 'error')
-        return redirect(url_for('create_show_form'))
+        flash(list(form.errors.values())[0][0], "error")
+        return redirect(url_for("create_show_form"))
 
     error = False
 
     try:
 
-        venue_id = request.form.get('venue_id')
-        artist_id = request.form.get('artist_id')
-        start_time = request.form.get('start_time')
+        venue_id = request.form.get("venue_id")
+        artist_id = request.form.get("artist_id")
+        start_time = request.form.get("start_time")
         unavailabilities = Unavailability.query.filter_by(
             artist_id=artist_id
         ).all()
@@ -884,8 +885,8 @@ def create_show_submission():
                 start_time > str(unavailability.start_time) and
                 start_time < str(unavailability.end_time)
             ):
-                flash('Artist is unavailable at selected time')
-                return redirect(url_for('create_show_form'))
+                flash("Artist is unavailable at selected time")
+                return redirect(url_for("create_show_form"))
 
         show = Show(
             venue_id=venue_id,
@@ -904,12 +905,12 @@ def create_show_submission():
         db.session.close()
 
     if error:
-        flash(f'Show was unable to be listed!', 'error')
+        flash(f"Show was unable to be listed!", "error")
         abort(500)
 
-    flash(f'Show was successfully listed!')
+    flash(f"Show was successfully listed!")
 
-    return redirect(url_for('shows'))
+    return redirect(url_for("shows"))
 
 
 # ----------------------------------------------------------------------------#
@@ -926,7 +927,7 @@ def not_found_error(error):  # pylint: disable=unused-argument
     Returns:
         A custom template for the error message
     """
-    return render_template('errors/404.html'), 404
+    return render_template("errors/404.html"), 404
 
 
 @app.errorhandler(500)
@@ -939,7 +940,7 @@ def server_error(error):  # pylint: disable=unused-argument
     Returns:
         A custom template for the error message
     """
-    return render_template('errors/500.html'), 500
+    return render_template("errors/500.html"), 500
 
 
 # ----------------------------------------------------------------------------#
@@ -947,20 +948,23 @@ def server_error(error):  # pylint: disable=unused-argument
 # ----------------------------------------------------------------------------#
 
 if not app.debug:
-    file_handler = FileHandler('error.log')
-    file_handler.setFormatter(Formatter(
-        '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'
-    ))
+    file_handler = FileHandler("error.log")
+    file_handler.setFormatter(
+        Formatter(
+            "%(asctime)s %(levelname)s: "
+            "%(message)s [in %(pathname)s:%(lineno)d]"
+        )
+    )
     app.logger.setLevel(logging.INFO)  # pylint: disable=no-member
     file_handler.setLevel(logging.INFO)
     app.logger.addHandler(file_handler)  # pylint: disable=no-member
-    app.logger.info('errors')  # pylint: disable=no-member
+    app.logger.info("errors")  # pylint: disable=no-member
 
 # ----------------------------------------------------------------------------#
 # Launch.
 # ----------------------------------------------------------------------------#
 
-if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5000))
-    host = os.environ.get('HOST', '127.0.0.1')
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 5000))
+    host = os.environ.get("HOST", "127.0.0.1")
     app.run(host=host, port=port)
