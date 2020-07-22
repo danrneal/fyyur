@@ -6,31 +6,34 @@ Fyyur is a musical venue and artist booking site that facilitates the discovery 
 
 Set-up a virtual environment and activate it:
 
-```shell
-python3 -m venv venv
-source venv/bin/activate
+```bash
+python3 -m venv env
+source env/bin/activate
 ```
 
-You should see (venv) before your command prompt now. (You can type `deactivate` to exit the virtual environment any time.)
+You should see (env) before your command prompt now. (You can type `deactivate` to exit the virtual environment any time.)
 
 Install the requirements:
 
-```shell
+```bash
+pip install -U pip
 pip install -r requirements.txt
 ```
 
-Initialize and set up database by starting with an empty database named fyyur and the run:
+Initialize and set up the database:
 
-```shell
+```bash
+dropdb fyyur
+createdb fyyur
 flask db upgrade
 ```
 
 ## Usage
 
-Make sure you are in the virtual environment (you should see (venv) before your command prompt). If not `source /venv/bin/activate` to enter it.
+Make sure you are in the virtual environment (you should see (env) before your command prompt). If not `source /env/bin/activate` to enter it.
 
-```shell
-Usage: app.py
+```bash
+Usage: flask run
 ```
 
 ## Screenshots
