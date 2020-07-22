@@ -1,15 +1,15 @@
 """Form objects used used to collect data for the app.
 
-    Attributes:
-        genres: A list of strs representing accepted genres
-        states: A list of strs representing accepted states
+Attributes:
+    genres: A list of strs representing accepted genres
+    states: A list of strs representing accepted states
 
-    Classes:
-        VenueForm(obj=None)
-        ArtistForm(obj=None)
-        ShowForm(obj=None)
-        Unavailability(obj=None)
-        MusicForm(obj=None)
+Classes:
+    VenueForm()
+    ArtistForm()
+    ShowForm()
+    Unavailability()
+    MusicForm()
 """
 
 from datetime import datetime
@@ -113,6 +113,7 @@ class AnyOfMultiple(object):
     """
 
     def __init__(self, values, message=None, values_formatter=None):
+        """Set-up for the AnyOfMultiple validator."""
         self.values = values
         self.message = message
         if values_formatter is None:
@@ -120,7 +121,7 @@ class AnyOfMultiple(object):
         self.values_formatter = values_formatter
 
     def __call__(self, form, field):
-
+        """Main caller function for the AnyOfMultiple validator."""
         for value in field.data:
             if value not in self.values:
 
@@ -145,7 +146,7 @@ class AnyOfMultiple(object):
 
 
 class VenueForm(Form):
-    """A form representing a venue
+    """A form representing a venue.
 
     Attributes:
         name: A str representing the venue's name
@@ -155,13 +156,13 @@ class VenueForm(Form):
         city: A str representing the city in which the venue is located
         state: A str representing the state in which the venue is located
         phone: A str representing the phone number for the venue
-        website: A str repersenting the website for the venue
+        website: A str representing the website for the venue
         facebook_link: A str representing a link to the venue's facebook page
         seeking_talent: A bool indicating whether the venue is seeking artists
             or not
         seeking_description: A str describing what type of artist the venue is
             seeking if seeking_talent bool is set to True
-        image_link: A str represening a link to an image of the venue
+        image_link: A str representing a link to an image of the venue
     """
 
     name = StringField(
@@ -234,7 +235,7 @@ class VenueForm(Form):
 
 
 class ArtistForm(Form):
-    """A form representing an artist
+    """A form representing an artist.
 
     Attributes:
         name: A str representing the artist's name
@@ -243,12 +244,12 @@ class ArtistForm(Form):
         city: A str representing the city in which the artist is from
         state: A str representing the state in which the artist is from
         phone: A str representing the artist's phone number
-        website: A str repersenting the artist's website
+        website: A str representing the artist's website
         facebook_link: A str representing a link to the artist's facebook page
         seeking_venue: A bool indicating whether the artist is seeking a venue
         seeking_description: A str describing what type of venue the artist is
             seeking if seeking_venue bool is set to True
-        image_link: A str represening a link to an image of the artist
+        image_link: A str representing a link to an image of the artist
     """
 
     name = StringField(
@@ -318,7 +319,7 @@ class ArtistForm(Form):
 
 
 class ShowForm(Form):
-    """A form representing a show
+    """A form representing a show.
 
     Attributes:
         venue_id: The id of the venue that the show was at
@@ -343,13 +344,13 @@ class ShowForm(Form):
 
 
 class UnavailabilityForm(Form):
-    """A form representing an unavailability for an artist
+    """A form representing an unavailability for an artist.
 
     Attributes:
         start_time: A datetime that represents the start time of the interval
             the artist is unavailable defaulting to today
         end_time: A datetime that represents the end time of the interval the
-            artist is uavailable
+            artist is unavailable
     """
 
     start_time = DateTimeField(
@@ -364,7 +365,7 @@ class UnavailabilityForm(Form):
 
 
 class MusicForm(Form):
-    """A form representing a song or album for an artist
+    """A form representing a song or album for an artist.
 
     Attributes:
         type_: A str representing the release type

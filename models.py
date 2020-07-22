@@ -1,24 +1,24 @@
 """Model objects used to model data for the db.
 
-    Attributes:
-        app: A flask Flack object creating the flask app
-        moment: A flask_moment Moment object used to format datetimes in Jinja2
-            templates bound to app
-        db: A flask_sqlalchemy SQLAlchemy object bound to app
-        migrate: A flask_migrate Migrate object bound to app and db
-        venue_genres: An association table for the many-to-many relationship
-            between venues and genres
-        artist_genres: An association table for the many-to-many relationship
-            between artist and genres
+Attributes:
+    app: A flask Flask object creating the flask app
+    moment: A flask_moment Moment object used to format datetimes in Jinja2
+        templates bound to app
+    db: A flask_sqlalchemy SQLAlchemy object bound to app
+    migrate: A flask_migrate Migrate object bound to app and db
+    venue_genres: An association table for the many-to-many relationship
+        between venues and genres
+    artist_genres: An association table for the many-to-many relationship
+        between artist and genres
 
-    Classes:
-        Venue()
-        Artist()
-        Show()
-        Genre()
-        Area()
-        Music()
-        Unavailability()
+Classes:
+    Venue()
+    Artist()
+    Show()
+    Genre()
+    Area()
+    Music()
+    Unavailability()
 """
 
 from flask import Flask
@@ -62,7 +62,7 @@ artist_genres = db.Table(
 
 
 class Venue(db.Model):
-    """A model representing a venue
+    """A model representing a venue.
 
     Attributes:
         id: A unique identifer for the venue object
@@ -72,14 +72,14 @@ class Venue(db.Model):
         address: A str representing the address of the venue
         area_id: The id of the area the venue is located in
         phone: A str representing the phone number for the venue
-        website: A str repersenting the website for the venue
+        website: A str representing the website for the venue
         facebook_link: A str representing a link to the venue's facebook page
         seeking_talent: A bool indicating whether the venue is seeking artists
             or not
         seeking_description: A str describing what type of artist the venue is
             seeking if seeking_talent bool is set to True
-        image_link: A str represening a link to an image of the venue
-        shows: A list of Show obects representing shows that are assciated
+        image_link: A str representing a link to an image of the venue
+        shows: A list of Show objects representing shows that are assciated
             with the venue
     """
 
@@ -107,11 +107,12 @@ class Venue(db.Model):
     )
 
     def __repr__(self):
+        """A Venue object's str representation."""
         return self.name
 
 
 class Artist(db.Model):
-    """A model representing an artist
+    """A model representing an artist.
 
     Attributes:
         id: A unique identifer for the artist object
@@ -120,15 +121,15 @@ class Artist(db.Model):
             plays
         area_id: The id of the area the artist is based out of
         phone: A str representing the artist's phone number
-        website: A str repersenting the artist's website
+        website: A str representing the artist's website
         facebook_link: A str representing a link to the artist's facebook page
         seeking_venue: A bool indicating whether the artist is seeking a venue
         seeking_description: A str describing what type of venue the artist is
             seeking if seeking_venue bool is set to True
-        image_link: A str represening a link to an image of the artist
-        shows: A list of Show obects representing shows that are assciated
+        image_link: A str representing a link to an image of the artist
+        shows: A list of Show objects representing shows that are assciated
             with the artist
-        unavailabilities: A list of Unavailability objecst representing when
+        unavailabilities: A list of Unavailability objects representing when
             the artist is unable to be booked
     """
 
@@ -163,11 +164,12 @@ class Artist(db.Model):
     )
 
     def __repr__(self):
+        """An Artist object's str representation."""
         return self.name
 
 
 class Show(db.Model):
-    """A model representing a show
+    """A model representing a show.
 
     Attributes:
         id: A unique identifer for the show object
@@ -196,7 +198,7 @@ class Show(db.Model):
 
 
 class Genre(db.Model):
-    """A model representing an genre
+    """A model representing an genre.
 
     Attributes:
         id: A unique identifer for the genre object
@@ -209,11 +211,12 @@ class Genre(db.Model):
     name = db.Column(db.String(120), nullable=False, unique=True)
 
     def __repr__(self):
+        """A Genre object's str representation."""
         return self.name
 
 
 class Area(db.Model):
-    """A model representing a city, state
+    """A model representing a city, state.
 
     Attributes:
         id: A unique identifier for the area object
@@ -238,9 +241,9 @@ class Area(db.Model):
 
 
 class Music(db.Model):
-    """A model representing a song or album for an artist
+    """A model representing a song or album for an artist.
 
-    Attibutes:
+    Attributes:
         id: A unique identifier for the music object
         artist_id: The id of the artist who the made the music
         type_: A str representing the release type of the music
@@ -258,7 +261,7 @@ class Music(db.Model):
 
 
 class Unavailability(db.Model):
-    """A model representing an interval of time that an artis is unavailable
+    """A model representing an interval of time that an artist is unavailable.
 
     Attributes:
         id: A unique identifier for the unavailability object
@@ -288,4 +291,5 @@ class Unavailability(db.Model):
     )
 
     def __repr__(self):
+        """An Unavailability object's str representation."""
         return (self.start_time, self.end_time)

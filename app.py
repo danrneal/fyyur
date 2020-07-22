@@ -3,7 +3,7 @@
 Fyyur is a musical venue and artist booking site that facilitates the discovery
 and bookings of shows between local performing artists and venues
 
-    Usage: app.py
+Usage: flask run
 """
 
 # ----------------------------------------------------------------------------#
@@ -44,7 +44,6 @@ def format_datetime(value, datetime_format="medium"):
     Returns:
         A date formatted according to the given format
     """
-
     date = dateutil.parser.parse(value)
 
     if datetime_format == "full":
@@ -62,8 +61,9 @@ app.jinja_env.filters["datetime"] = format_datetime  # pylint: disable=E1101
 # Helpers
 # ----------------------------------------------------------------------------#
 
+
 def get_genres(genre_names):
-    """Gets a list of genre objects from a list of genre names
+    """Gets a list of genre objects from a list of genre names.
 
     Args:
         genre_names: A list of strs representing the names of genres
@@ -72,7 +72,6 @@ def get_genres(genre_names):
         genres: A list of genre objects corresponding the the genre names
             passed in
     """
-
     genres = []
 
     for genre_name in genre_names:
@@ -86,7 +85,7 @@ def get_genres(genre_names):
 
 
 def get_area_id(city, state):
-    """Gets the area id of an area from a city and state
+    """Gets the area id of an area from a city and state.
 
     Args:
         city: A str representing the city of an area object
@@ -96,7 +95,6 @@ def get_area_id(city, state):
         area_id: An int representing the id of the area object cooresponding
             to a city and state
     """
-
     area = Area.query.filter(Area.city == city, Area.state == state).first()
 
     if not area:
@@ -114,7 +112,7 @@ def get_area_id(city, state):
 
 @app.route("/")
 def index():
-    """The route handler for the homepage
+    """The route handler for the homepage.
 
     Returns:
         A rendered html template for the homepage
@@ -152,7 +150,7 @@ def index():
 
 @app.route("/venues")
 def venues():
-    """Route handler for looking at all venues grouped by city, state
+    """Route handler for looking at all venues grouped by city, state.
 
     Returns:
         A template for all venues populated with venues grouped by city, state
@@ -165,7 +163,7 @@ def venues():
 
 @app.route("/venues/search", methods=["POST"])
 def search_venues():
-    """Route handler for venue search
+    """Route handler for venue search.
 
     Returns:
         A template with the search results
@@ -189,7 +187,7 @@ def search_venues():
 
 @app.route("/venues/<int:venue_id>")
 def show_venue(venue_id):
-    """Route handler for showing the details for a venue
+    """Route handler for showing the details for a venue.
 
     Args:
         venue_id: A str representing the id of the venue to show details for
@@ -197,7 +195,6 @@ def show_venue(venue_id):
     Returns:
         A template with the detail view for a venue
     """
-
     venue = Venue.query.get(venue_id)
     venue.city = venue.area.city
     venue.state = venue.area.state
@@ -226,7 +223,7 @@ def show_venue(venue_id):
 
 @app.route("/venues/<int:venue_id>/edit", methods=["GET"])
 def edit_venue_form(venue_id):
-    """Displays the form for editing a venue
+    """Displays the form for editing a venue.
 
     Args:
         venue_id: A str representing the id of the venue to edit
@@ -244,7 +241,7 @@ def edit_venue_form(venue_id):
 
 @app.route("/venues/<int:venue_id>/edit", methods=["POST"])
 def edit_venue_submission(venue_id):
-    """Updates an existing venue in the db from a form submission
+    """Updates an existing venue in the db from a form submission.
 
     Args:
         venue_id: A str representing the id of the venue to update
@@ -252,7 +249,6 @@ def edit_venue_submission(venue_id):
     Returns:
         The template for the venue's detail page
     """
-
     form = VenueForm()
     if not form.validate():
         flash(list(form.errors.values())[0][0], "error")
@@ -298,7 +294,7 @@ def edit_venue_submission(venue_id):
 
 @app.route("/venues/create", methods=["GET"])
 def create_venue_form():
-    """Displays the form for creating a venue
+    """Displays the form for creating a venue.
 
     Returns:
         A html template for the venue form
@@ -309,12 +305,11 @@ def create_venue_form():
 
 @app.route("/venues/create", methods=["POST"])
 def create_venue_submission():
-    """Creates a new venue in the db from a form submission
+    """Creates a new venue in the db from a form submission.
 
     Returns:
         The template for a list of all venues
     """
-
     form = VenueForm()
     if not form.validate():
         flash(list(form.errors.values())[0][0], "error")
@@ -365,7 +360,7 @@ def create_venue_submission():
 
 @app.route("/venues/<venue_id>", methods=["DELETE"])
 def delete_venue(venue_id):
-    """Route handler to delete a venue from the db
+    """Route handler to delete a venue from the db.
 
     Args:
         venue_id: A str representing the id of the venue to delete
@@ -373,7 +368,6 @@ def delete_venue(venue_id):
     Returns:
         response: A json object signalling the deletion request was successful
     """
-
     error = False
 
     try:
@@ -404,7 +398,7 @@ def delete_venue(venue_id):
 
 @app.route("/artists")
 def artists():
-    """Route handler for showing a list of artists
+    """Route handler for showing a list of artists.
 
     Returns:
         A template for a list of all artists
@@ -415,7 +409,7 @@ def artists():
 
 @app.route("/artists/search", methods=["POST"])
 def search_artists():
-    """Route handler for artist search
+    """Route handler for artist search.
 
     Returns:
         A template with the search results
@@ -439,7 +433,7 @@ def search_artists():
 
 @app.route("/artists/<int:artist_id>")
 def show_artist(artist_id):
-    """Route handler for showing the details for an artist
+    """Route handler for showing the details for an artist.
 
     Args:
         artist_id: A str representing the id of the artist to show details for
@@ -447,7 +441,6 @@ def show_artist(artist_id):
     Returns:
         A template with the detail view for an artist
     """
-
     artist = Artist.query.get(artist_id)
     artist.city = artist.area.city
     artist.state = artist.area.state
@@ -482,12 +475,11 @@ def show_artist(artist_id):
 
 @app.route("/artists/<int:artist_id>/music/create", methods=["POST"])
 def create_music(artist_id):
-    """Creates a new featured song or album for the artist from form submission
+    """Creates a new featured song/album for the artist from form submission.
 
     Returns:
         The detail view for the artist
     """
-
     form = MusicForm()
     if not form.validate():
         flash(list(form.errors.values())[0][0], "error")
@@ -522,7 +514,7 @@ def create_music(artist_id):
 
 @app.route("/artists/<int:artist_id>/music/<int:music_id>", methods=["DELETE"])
 def delete_music(artist_id, music_id):  # pylint: disable=unused-argument
-    """Route handler to delete an piece of music for an artist from the db
+    """Route handler to delete an piece of music for an artist from the db.
 
     Args:
         artist_id: A str representing the id of the artist who's music is being
@@ -532,7 +524,6 @@ def delete_music(artist_id, music_id):  # pylint: disable=unused-argument
     Returns:
         response: A json object signalling the deletion request was successful
     """
-
     error = False
 
     try:
@@ -563,12 +554,11 @@ def delete_music(artist_id, music_id):  # pylint: disable=unused-argument
 
 @app.route("/artists/<int:artist_id>/unavailability/create", methods=["POST"])
 def create_unavailability(artist_id):
-    """Creates a new unavailability for the artist from a form submission
+    """Creates a new unavailability for the artist from a form submission.
 
     Returns:
         The detail view for the artist
     """
-
     form = UnavailabilityForm()
     if not form.validate():
         flash(list(form.errors.values())[0][0], "error")
@@ -602,6 +592,7 @@ def create_unavailability(artist_id):
 
 # Delete Unavailability
 
+
 @app.route(
     "/artists/<int:artist_id>/unavailability/<int:unavailability_id>",
     methods=["DELETE"],
@@ -609,18 +600,17 @@ def create_unavailability(artist_id):
 def delete_unavailability(
     artist_id, unavailability_id  # pylint: disable=unused-argument
 ):
-    """Route handler to delete an unavailability for an artist from the db
+    """Route handler to delete an unavailability for an artist from the db.
 
     Args:
         artist_id: A str representing the id of the artist who's unavailability
             is being deleted
-        unavailability_id: A str representing the id of the unavailablity to
+        unavailability_id: A str representing the id of the unavailability to
             delete
 
     Returns:
         response: A json object signalling the deletion request was successful
     """
-
     error = False
 
     try:
@@ -650,7 +640,7 @@ def delete_unavailability(
 
 @app.route("/artists/<int:artist_id>/edit", methods=["GET"])
 def edit_artist_form(artist_id):
-    """Displays the form for editing an artist
+    """Displays the form for editing an artist.
 
     Args:
         artist_id: A str representing the id of the artist to edit
@@ -668,7 +658,7 @@ def edit_artist_form(artist_id):
 
 @app.route("/artists/<int:artist_id>/edit", methods=["POST"])
 def edit_artist_submission(artist_id):
-    """Updates an existing artist in the db from a form submission
+    """Updates an existing artist in the db from a form submission.
 
     Args:
         artist_id: A str representing the id of the artist to update
@@ -676,7 +666,6 @@ def edit_artist_submission(artist_id):
     Returns:
         The template for the artist's detail page
     """
-
     form = ArtistForm()
     if not form.validate():
         flash(list(form.errors.values())[0][0], "error")
@@ -721,7 +710,7 @@ def edit_artist_submission(artist_id):
 
 @app.route("/artists/create", methods=["GET"])
 def create_artist_form():
-    """Displays the form for creating an artist
+    """Displays the form for creating an artist.
 
     Returns:
         A html template for the artist form
@@ -732,12 +721,11 @@ def create_artist_form():
 
 @app.route("/artists/create", methods=["POST"])
 def create_artist_submission():
-    """Creates a new artist in the db from a form submission
+    """Creates a new artist in the db from a form submission.
 
     Returns:
         The template for a list of all artists
     """
-
     form = ArtistForm()
     if not form.validate():
         flash(list(form.errors.values())[0][0], "error")
@@ -785,7 +773,7 @@ def create_artist_submission():
 
 @app.route("/artists/<artist_id>", methods=["DELETE"])
 def delete_artist(artist_id):
-    """Route handler to delete a artist from the db
+    """Route handler to delete a artist from the db.
 
     Args:
         artist_id: A str representing the id of the artist to delete
@@ -793,7 +781,6 @@ def delete_artist(artist_id):
     Returns:
         response: A json object signalling the deletion request was successful
     """
-
     error = False
 
     try:
@@ -824,12 +811,11 @@ def delete_artist(artist_id):
 
 @app.route("/shows")
 def shows():
-    """Route handler for showing a list of shows
+    """Route handler for showing a list of shows.
 
     Returns:
         A template for a list of all shows
     """
-
     shows_all = Show.query.all()
 
     for show in shows_all:
@@ -847,7 +833,7 @@ def shows():
 
 @app.route("/shows/create", methods=["GET"])
 def create_show_form():
-    """Displays the form for creating a show
+    """Displays the form for creating a show.
 
     Returns:
         A html template for the show form
@@ -858,12 +844,11 @@ def create_show_form():
 
 @app.route("/shows/create", methods=["POST"])
 def create_show_submission():
-    """Creates a new show in the db from a form submission
+    """Creates a new show in the db from a form submission.
 
     Returns:
         A redirect to the shows page
     """
-
     form = ShowForm()
     if not form.validate():
         flash(list(form.errors.values())[0][0], "error")
@@ -917,9 +902,10 @@ def create_show_submission():
 # Error Handlers
 # ----------------------------------------------------------------------------#
 
+
 @app.errorhandler(404)
 def not_found_error(error):  # pylint: disable=unused-argument
-    """Error handler for 404 not found
+    """Error handler for 404 not found.
 
     Args:
         error: unused
@@ -932,7 +918,7 @@ def not_found_error(error):  # pylint: disable=unused-argument
 
 @app.errorhandler(500)
 def server_error(error):  # pylint: disable=unused-argument
-    """Error handler for 500 internal server error
+    """Error handler for 500 internal server error.
 
     Args:
         error: unused
