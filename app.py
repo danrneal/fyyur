@@ -148,8 +148,9 @@ def index():
         len(recent_artists) > 0 or len(recent_venues) > 0
     ):
         if (
-            len(recent_artists) == 0
-            or recent_venues[0].created_at > recent_artists[0].created_at
+            len(recent_venues) > 0
+            and recent_venues[0].created_at > recent_artists[0].created_at
+            or len(recent_artists) == 0
         ):
             recent_venues[0].type = "Venue"
             recently_listed.append(recent_venues.pop(0))
