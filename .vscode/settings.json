@@ -1,0 +1,17 @@
+{
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": true
+  },
+  "editor.formatOnSave": true,
+  "html.format.enable": true,
+  "javascript.format.enable": false,
+  "json.format.enable": false,
+  "prettier.disableLanguages": ["html"],
+  "python.formatting.provider": "black",
+  "python.linting.flake8Enabled": true,
+  "python.linting.pylintCategorySeverity.refactor": "Information",
+  "python.linting.pylintUseMinimalCheckers": false,
+  "python.pythonPath": "env/bin/python3",
+  "python.terminal.activateEnvInCurrentTerminal": true,
+  "typescript.format.enable": false
+}
