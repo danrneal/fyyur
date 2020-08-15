@@ -73,7 +73,7 @@ def format_datetime(value, datetime_format="medium"):
     return babel.dates.format_datetime(date, datetime_format)
 
 
-app.jinja_env.filters["datetime"] = format_datetime  # pylint: disable=E1101
+app.jinja_env.filters["datetime"] = format_datetime
 
 
 # ----------------------------------------------------------------------------#
@@ -187,13 +187,12 @@ def search_venues():
     """
     search_term = request.form.get("search_term", "")
     areas = Area.query.filter(
-        Area.city.ilike(f"%{search_term}%")  # pylint: disable=no-member
-        | Area.state.ilike(f"%{search_term}%")  # pylint: disable=no-member
+        Area.city.ilike(f"%{search_term}%")
+        | Area.state.ilike(f"%{search_term}%")
     ).all()
     area_ids = [area.id for area in areas]
     data = Venue.query.filter(
-        Venue.name.ilike(f"%{search_term}%")  # pylint: disable=no-member
-        | Venue.area_id.in_(area_ids)  # pylint: disable=no-member
+        Venue.name.ilike(f"%{search_term}%") | Venue.area_id.in_(area_ids)
     ).all()
     results = {"count": len(data), "data": data}
 
@@ -268,7 +267,9 @@ def edit_venue_submission(venue_id):
     """
     form = VenueForm()
     if not form.validate():
-        flash(list(form.errors.values())[0][0], "error")
+        flash(
+            list(form.errors.values())[0][0], "error",
+        )
         return redirect(url_for("edit_venue_form", venue_id=venue_id))
 
     error = False
@@ -329,7 +330,9 @@ def create_venue_submission():
     """
     form = VenueForm()
     if not form.validate():
-        flash(list(form.errors.values())[0][0], "error")
+        flash(
+            list(form.errors.values())[0][0], "error",
+        )
         return redirect(url_for("create_venue_form"))
 
     error = False
@@ -433,13 +436,12 @@ def search_artists():
     """
     search_term = request.form.get("search_term", "")
     areas = Area.query.filter(
-        Area.city.ilike(f"%{search_term}%")  # pylint: disable=no-member
-        | Area.state.ilike(f"%{search_term}%")  # pylint: disable=no-member
+        Area.city.ilike(f"%{search_term}%")
+        | Area.state.ilike(f"%{search_term}%")
     ).all()
     area_ids = [area.id for area in areas]
     data = Artist.query.filter(
-        Artist.name.ilike(f"%{search_term}%")  # pylint: disable=no-member
-        | Artist.area_id.in_(area_ids)  # pylint: disable=no-member
+        Artist.name.ilike(f"%{search_term}%") | Artist.area_id.in_(area_ids)
     ).all()
     results = {"count": len(data), "data": data}
 
@@ -499,7 +501,9 @@ def create_music(artist_id):
     """
     form = MusicForm()
     if not form.validate():
-        flash(list(form.errors.values())[0][0], "error")
+        flash(
+            list(form.errors.values())[0][0], "error",
+        )
         return redirect(url_for("show_artist", artist_id=artist_id))
 
     error = False
@@ -578,7 +582,9 @@ def create_unavailability(artist_id):
     """
     form = UnavailabilityForm()
     if not form.validate():
-        flash(list(form.errors.values())[0][0], "error")
+        flash(
+            list(form.errors.values())[0][0], "error",
+        )
         return redirect(url_for("show_artist", artist_id=artist_id))
 
     error = False
@@ -685,7 +691,9 @@ def edit_artist_submission(artist_id):
     """
     form = ArtistForm()
     if not form.validate():
-        flash(list(form.errors.values())[0][0], "error")
+        flash(
+            list(form.errors.values())[0][0], "error",
+        )
         return redirect(url_for("edit_artist_form", artist_id=artist_id))
 
     error = False
@@ -745,7 +753,9 @@ def create_artist_submission():
     """
     form = ArtistForm()
     if not form.validate():
-        flash(list(form.errors.values())[0][0], "error")
+        flash(
+            list(form.errors.values())[0][0], "error",
+        )
         return redirect(url_for("create_artist_form"))
 
     error = False
@@ -868,7 +878,9 @@ def create_show_submission():
     """
     form = ShowForm()
     if not form.validate():
-        flash(list(form.errors.values())[0][0], "error")
+        flash(
+            list(form.errors.values())[0][0], "error",
+        )
         return redirect(url_for("create_show_form"))
 
     error = False
@@ -957,10 +969,10 @@ if not app.debug:
             "%(message)s [in %(pathname)s:%(lineno)d]"
         )
     )
-    app.logger.setLevel(logging.INFO)  # pylint: disable=no-member
+    app.logger.setLevel(logging.INFO)
     file_handler.setLevel(logging.INFO)
-    app.logger.addHandler(file_handler)  # pylint: disable=no-member
-    app.logger.info("errors")  # pylint: disable=no-member
+    app.logger.addHandler(file_handler)
+    app.logger.info("errors")
 
 # ----------------------------------------------------------------------------#
 # Launch.
