@@ -97,11 +97,7 @@ class Venue(db.Model):
     seeking_talent = db.Column(db.Boolean, nullable=False, default=False)
     seeking_description = db.Column(db.String(500))
     image_link = db.Column(db.String(500))
-    created_at = db.Column(
-        db.DateTime,
-        nullable=False,
-        default=db.func.now(),  # pylint: disable=no-member
-    )
+    created_at = db.Column(db.DateTime, nullable=False, default=db.func.now(),)
     shows = db.relationship(
         "Show", backref="venue", cascade="all, delete-orphan"
     )
@@ -148,11 +144,7 @@ class Artist(db.Model):
     seeking_venue = db.Column(db.Boolean, nullable=False, default=False)
     seeking_description = db.Column(db.String(500))
     image_link = db.Column(db.String(500))
-    created_at = db.Column(
-        db.DateTime,
-        nullable=False,
-        default=db.func.now(),  # pylint: disable=no-member
-    )
+    created_at = db.Column(db.DateTime, nullable=False, default=db.func.now(),)
     shows = db.relationship(
         "Show", backref="artist", cascade="all, delete-orphan"
     )
@@ -280,11 +272,7 @@ class Unavailability(db.Model):
     artist_id = db.Column(
         db.Integer, db.ForeignKey("artists.id"), nullable=False
     )
-    start_time = db.Column(
-        db.DateTime,
-        nullable=False,
-        default=db.func.now(),  # pylint: disable=no-member
-    )
+    start_time = db.Column(db.DateTime, nullable=False, default=db.func.now(),)
     end_time = db.Column(db.DateTime, nullable=False)
 
     def __repr__(self):
