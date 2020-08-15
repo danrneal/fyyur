@@ -104,7 +104,7 @@ class Venue(db.Model):
 
     def __repr__(self):
         """A Venue object's str representation."""
-        return self.name
+        return str(self.name)
 
 
 class Artist(db.Model):
@@ -157,7 +157,7 @@ class Artist(db.Model):
 
     def __repr__(self):
         """An Artist object's str representation."""
-        return self.name
+        return str(self.name)
 
 
 class Show(db.Model):
@@ -204,7 +204,7 @@ class Genre(db.Model):
 
     def __repr__(self):
         """A Genre object's str representation."""
-        return self.name
+        return str(self.name)
 
 
 class Area(db.Model):
@@ -277,4 +277,4 @@ class Unavailability(db.Model):
 
     def __repr__(self):
         """An Unavailability object's str representation."""
-        return (self.start_time, self.end_time)
+        return f"({self.start_time}, {self.end_time})"
