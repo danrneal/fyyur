@@ -5,9 +5,6 @@ line-length = 79
 multi_line_import = 3
 include_trailing_comma = true
 
-[tool.pylint.master]
-load-plugins = "pylint_flask_sqlalchemy"
-
 [tool.pylint.messages_control]
 disable = [
     "design",
@@ -24,4 +21,8 @@ disable = [
     "invalid-name",
     "bad-classmethod-argument",
     "bad-mcs-classmethod-argument",
+    "f-string-without-interpolation",
 ]
+
+[tool.pylint.typecheck]
+generated-members = ["app.jinja_env.*", "app.logger.*", "db.*", "form.*"]
