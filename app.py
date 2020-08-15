@@ -605,10 +605,10 @@ def create_unavailability(artist_id):
         db.session.close()
 
     if error:
-        flash(f"Unavailability could not be added!", "error")
+        flash("Unavailability could not be added!", "error")
         abort(500)
 
-    flash(f"Unavailability was successfully added!")
+    flash("Unavailability was successfully added!")
 
     return redirect(url_for("show_artist", artist_id=artist_id))
 
@@ -649,10 +649,10 @@ def delete_unavailability(
         db.session.close()
 
     if error:
-        flash(f"Unavailability was unable to be deleted!", "error")
+        flash("Unavailability was unable to be deleted!", "error")
         abort(500)
 
-    flash(f"Unavailability was successfully deleted!")
+    flash("Unavailability was successfully deleted!")
 
     return jsonify(response)
 
@@ -918,10 +918,10 @@ def create_show_submission():
         db.session.close()
 
     if error:
-        flash(f"Show was unable to be listed!", "error")
+        flash("Show was unable to be listed!", "error")
         abort(500)
 
-    flash(f"Show was successfully listed!")
+    flash("Show was successfully listed!")
 
     return redirect(url_for("shows"))
 
